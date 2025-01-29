@@ -61,8 +61,11 @@
 	<text transform="matrix(1 0 0 1 912.7246 1386.916)" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">M90</text>
 </g>
 <g>
-	<text transform="matrix(1 0 0 1 1115.5107 1289.6748)"><tspan x="0" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">SAN DIEGO</tspan><tspan x="17.6" y="15.5" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">DRIVE</tspan></text>
-	<text transform="matrix(1 0 0 1 1138.8408 1386.916)" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">$60</text>
+	<text transform="matrix(1 0 0 1 1115.5107 1289.6748)">
+		<tspan x="-10" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">BOULEVARD DE</tspan>
+		<tspan x="0" y="15.5" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">COURCELLES</tspan>
+	</text>
+	<text transform="matrix(1 0 0 1 1138.8408 1386.916)" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">60€</text>
 </g>
 <rect x="198.3" y="197.8" fill="#C9DAF8" stroke="#231F20" stroke-width="1.9722" stroke-miterlimit="10" width="1010.2" height="1010.2"/>
 <g>
