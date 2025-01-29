@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="250" height="350" xmlns="http://www.w3.org/2000/svg">
+    <!-- Fond de carte -->
+    <rect x="10" y="10" width="230" height="330" rx="15" 
+          fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+    
+    <!-- En-tête -->
+    <rect x="20" y="20" width="210" height="40" rx="5" 
+          fill="#42a5f5"/>
+    <text x="40" y="47" font-family="Arial" font-size="24" fill="white">OBJET</text>
+    <text x="190" y="47" font-family="Arial" font-size="24" fill="white">💎</text>
+    
+    <!-- Zone illustration -->
+    <rect x="30" y="70" width="190" height="140" rx="5" 
+          fill="white" stroke="#1565c0" stroke-width="1"/>
+    <text x="125" y="150" font-family="Arial" font-size="48" 
+          text-anchor="middle" fill="#1565c0">👞</text>
+    
+    <!-- Nom de l'objet -->
+    <rect x="20" y="220" width="210" height="40" rx="5" 
+          fill="#42a5f5"/>
+    <text x="125" y="247" font-family="Arial" font-size="18" 
+          text-anchor="middle" fill="white">CHAUSSURES PROPRES</text>
+    
+    <!-- Zone valeur -->
+    <rect x="30" y="270" width="190" height="30" rx="5" 
+          fill="white" stroke="#1565c0" stroke-width="1"/>
+    <text x="40" y="290" font-family="Arial" font-size="14" 
+          fill="#1565c0">Valeur: 100€ | Points: +1 PC</text>
+    
+    <!-- Zone condition -->
+    <rect x="30" y="310" width="190" height="20" rx="5" 
+          fill="white" stroke="#1565c0" stroke-width="1"/>
+    <text x="40" y="324" font-family="Arial" font-size="12" 
+          fill="#1565c0">Perdu si dormir dehors</text>
+</svg> 

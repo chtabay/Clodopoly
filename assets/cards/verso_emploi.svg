@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="250" height="350" xmlns="http://www.w3.org/2000/svg">
+    <!-- Fond de carte -->
+    <rect x="10" y="10" width="230" height="330" rx="15" 
+          fill="#fff3e0" stroke="#ef6c00" stroke-width="2"/>
+    
+    <!-- Motif -->
+    <rect x="30" y="30" width="190" height="290" rx="10"
+          fill="none" stroke="#ffa726" stroke-width="4"/>
+    
+    <!-- Logo central -->
+    <text x="125" y="175" font-family="Arial" font-size="72" 
+          text-anchor="middle" fill="#ef6c00">💼</text>
+    
+    <!-- Texte -->
+    <text x="125" y="250" font-family="Arial" font-size="24" 
+          text-anchor="middle" fill="#ef6c00">EMPLOI</text>
+</svg> 
