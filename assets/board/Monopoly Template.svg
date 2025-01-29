@@ -32,38 +32,57 @@
 	<rect x="198.3" y="1208" fill="#6DCEF5" stroke="#231F20" stroke-width="2" stroke-miterlimit="10" width="112.2" height="54.4"/>
 </g>
 <g>
-	<text transform="matrix(1 0 0 1 225.5967 1289.6748)"><tspan x="0" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">BOSTON</tspan><tspan x="9" y="15.5" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">DRIVE</tspan></text>
-	<text transform="matrix(1 0 0 1 236.9189 1386.916)" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">M150</text>
+	<text transform="matrix(1 0 0 1 225.5967 1289.6748)">
+		<tspan x="4" y="0" fill="#231F20" font-family="Arial" font-size="12.5px">AVENUE</tspan>
+		<tspan x="8" y="15" fill="#231F20" font-family="Arial" font-size="12.5px">DE LA</tspan>
+		<tspan x="-12" y="30" fill="#231F20" font-family="Arial" font-size="12.5px">RÉPUBLIQUE</tspan>
+	</text>
+	<text transform="matrix(1 0 0 1 225.5967 1386.916)" fill="#231F20" font-family="Arial" font-size="13.987px">150€</text>
 </g>
 <g>
-	<text transform="matrix(1 0 0 1 336.8311 1289.6748)"><tspan x="0" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">PHOENIX</tspan><tspan x="10" y="15.5" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">DRIVE</tspan></text>
-	<text transform="matrix(1 0 0 1 349.4326 1386.916)" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">M130</text>
+	<text transform="matrix(1 0 0 1 336.8311 1289.6748)">
+		<tspan x="4" y="0" fill="#231F20" font-family="Arial" font-size="12.5px">RUE DE</tspan>
+		<tspan x="-14" y="15.5" fill="#231F20" font-family="Arial" font-size="12.5px">COURCELLES</tspan>
+	</text>
+	<text transform="matrix(1 0 0 1 336.8311 1386.916)" fill="#231F20" font-family="Arial" font-size="13.987px">130€</text>
 </g>
 <g>
-	
-		<text transform="matrix(1 0 0 1 445.2368 1356.7959)" fill="#90278E" font-family="'Poppins-Bold'" font-size="125px" letter-spacing="2">?</text>
-	<text transform="matrix(1 0 0 1 449.3071 1246.5244)" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">CHANCE</text>
+	<text transform="matrix(1 0 0 1 445.2368 1356.7959)" fill="#90278E" font-family="Arial" font-size="125px" letter-spacing="2">?</text>
+	<text transform="matrix(1 0 0 1 445.2368 1246.5244)" fill="#231F20" font-family="Arial" font-size="13.987px">CHANCE</text>
 </g>
 <g>
-	<text transform="matrix(1 0 0 1 557.4795 1289.6748)"><tspan x="0" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">VERMONT</tspan><tspan x="13.8" y="15.5" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">DRIVE</tspan></text>
-	<text transform="matrix(1 0 0 1 574.0117 1386.916)" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">M120</text>
+	<text transform="matrix(1 0 0 1 557.4795 1289.6748)">
+		<tspan x="0" y="0" fill="#231F20" font-family="Arial" font-size="12.5px">RUE DE</tspan>
+		<tspan x="-18" y="15.5" fill="#231F20" font-family="Arial" font-size="12.5px">VAUGIRARD</tspan>
+	</text>
+	<text transform="matrix(1 0 0 1 557.4795 1386.916)" fill="#231F20" font-family="Arial" font-size="13.987px">120€</text>
 </g>
 <g>
-	<text transform="matrix(1 0 0 1 674.9556 1246.5244)"><tspan x="0" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">BEVERLY</tspan><tspan x="-5.7" y="15.5" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">RAILROAD</tspan></text>
-	<text transform="matrix(1 0 0 1 684.0957 1386.916)" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">M200</text>
+	<text transform="matrix(1 0 0 1 674.9556 1246.5244)">
+		<tspan x="-8" y="0" fill="#231F20" font-family="Arial" font-size="12.5px">GARE</tspan>
+		<tspan x="-24" y="15.5" fill="#231F20" font-family="Arial" font-size="12.5px">MONTPARNASSE</tspan>
+	</text>
+	<text transform="matrix(1 0 0 1 674.9556 1386.916)" fill="#231F20" font-family="Arial" font-size="13.987px">200€</text>
 </g>
 <g>
-	<text transform="matrix(1 0 0 1 765.8379 1254.5254)"><tspan x="0" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="23.3116px">INCOME </tspan><tspan x="27.9" y="24.9" fill="#231F20" font-family="'Poppins-Regular'" font-size="23.3116px">TAX</tspan></text>
-	<text transform="matrix(1 0 0 1 782.8477 1386.916)" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">PAY M150</text>
+	<text transform="matrix(1 0 0 1 765.8379 1254.5254)">
+		<tspan x="-12" y="0" fill="#231F20" font-family="Arial" font-size="23.3116px">IMPÔTS</tspan>
+		<tspan x="-12" y="24.9" fill="#231F20" font-family="Arial" font-size="23.3116px">SUR LE</tspan>
+		<tspan x="-12" y="49.8" fill="#231F20" font-family="Arial" font-size="23.3116px">REVENU</tspan>
+	</text>
+	<text transform="matrix(1 0 0 1 765.8379 1386.916)" fill="#231F20" font-family="Arial" font-size="13.987px">150€</text>
 </g>
 <g>
-	<text transform="matrix(1 0 0 1 900.3809 1289.6748)"><tspan x="0" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">KANSAS</tspan><tspan x="5.8" y="15.5" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">DRIIVE</tspan></text>
+	<text transform="matrix(1 0 0 1 900.3809 1289.6748)">
+		<tspan x="0" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">RUE</tspan>
+		<tspan x="5.8" y="15.5" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">LECOURBE</tspan>
+	</text>
 	<text transform="matrix(1 0 0 1 912.7246 1386.916)" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">M90</text>
 </g>
 <g>
 	<text transform="matrix(1 0 0 1 1115.5107 1289.6748)">
-		<tspan x="-10" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">BOULEVARD DE</tspan>
-		<tspan x="0" y="15.5" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">COURCELLES</tspan>
+		<tspan x="-22" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">BOULEVARD DE</tspan>
+		<tspan x="-18" y="15.5" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">BELLEVILLE</tspan>
 	</text>
 	<text transform="matrix(1 0 0 1 1138.8408 1386.916)" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">60€</text>
 </g>
@@ -121,7 +140,7 @@
 	<text transform="matrix(0 -1 1 0 1246.9521 521.7295)"><tspan x="0" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">COMMUNITY</tspan><tspan x="21" y="15.5" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">CHEST</tspan></text>
 </g>
 <g>
-	<text transform="matrix(0 -1 1 0 1290.1006 397.3643)"><tspan x="0" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">CLEMENT</tspan><tspan x="11.4" y="15.5" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">DRIVE</tspan></text>
+	<text transform="matrix(0 -1 1 0 1290.1006 397.3643)"><tspan x="0" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">CLEMENTINE</tspan><tspan x="11.4" y="15.5" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">DRIVE</tspan></text>
 	<text transform="matrix(0 -1 1 0 1387.3418 385.5527)" fill="#231F20" font-family="'Poppins-Regular'" font-size="13.987px">M300</text>
 </g>
 <g>
@@ -404,7 +423,7 @@
 </g>
 <text transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 168.375 137.7173)"><tspan x="0" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="20px">FREE</tspan><tspan x="-21.1" y="24.9" fill="#231F20" font-family="'Poppins-Regular'" font-size="20px">PARKING</tspan></text>
 <text transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 1277.1069 176.088)"><tspan x="0" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="20px">GO TO</tspan><tspan x="13" y="24.9" fill="#231F20" font-family="'Poppins-Regular'" font-size="20px">JAIL</tspan></text>
-<text transform="matrix(0.7071 -0.7071 0.7071 0.7071 1223.3895 1285.038)"><tspan x="0" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="20px">COLLECT</tspan><tspan x="18.5" y="24.9" fill="#231F20" font-family="'Poppins-Regular'" font-size="20px">$200</tspan><tspan x="-8.8" y="49.7" fill="#231F20" font-family="'Poppins-Regular'" font-size="20px">SALARY AS</tspan><tspan x="-5.1" y="74.6" fill="#231F20" font-family="'Poppins-Regular'" font-size="20px">YOU PASS</tspan></text>
+<text transform="matrix(0.7071 -0.7071 0.7071 0.7071 1223.3895 1285.038)"><tspan x="0" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="20px">RECEVEZ</tspan><tspan x="18.5" y="24.9" fill="#231F20" font-family="'Poppins-Regular'" font-size="20px">200€</tspan><tspan x="-8.8" y="49.7" fill="#231F20" font-family="'Poppins-Regular'" font-size="20px">EN PASSANT</tspan><tspan x="-5.1" y="74.6" fill="#231F20" font-family="'Poppins-Regular'" font-size="20px">SALARY AS</tspan><tspan x="-5.1" y="99.5" fill="#231F20" font-family="'Poppins-Regular'" font-size="20px">YOU PASS</tspan></text>
 <text transform="matrix(0.7071 0.7071 -0.7071 0.7071 155.7949 1235.3527)"><tspan x="0" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="23.3117px">IN</tspan><tspan x="-11.3" y="24.9" fill="#231F20" font-family="'Poppins-Regular'" font-size="23.3117px">JAIL</tspan></text>
 <text transform="matrix(0.7071 0.7071 -0.7071 0.7071 45.7332 1327.5448)"><tspan x="0" y="0" fill="#231F20" font-family="'Poppins-Regular'" font-size="20px">JUST</tspan><tspan x="-17.7" y="24.9" fill="#231F20" font-family="'Poppins-Regular'" font-size="20px">VISITING</tspan></text>
 <polygon fill="#EC1C24" points="1341.5,1389.5 1353.9,1377.2 1336,1359.2 1385.3,1359.2 1385.3,1335.5 1336,1335.5 1353.9,1317.5 
@@ -457,14 +476,14 @@
 	</g>
 	<g>
 		
-			<rect x="123.5" y="1234.7" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -868.5166 464.0243)" fill="#231F20" width="4.8" height="91.5"/>
+			<rect x="123.5" y="1234.7" transform="matrix(0.7071 -0.7071 0.7071 -868.5166 464.0243)" fill="#231F20" width="4.8" height="91.5"/>
 		
 			<rect x="88.9" y="1269.3" transform="matrix(0.7072 -0.707 0.707 0.7072 -903.0686 449.5873)" fill="#231F20" width="4.8" height="91.5"/>
 	</g>
 </g>
 <g>
 	
-		<rect x="898.3" y="943.9" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -421.411 1013.5135)" fill="#F6921E" stroke="#231F20" stroke-width="2" stroke-miterlimit="10" width="228.8" height="143.1"/>
+		<rect x="898.3" y="943.9" transform="matrix(0.7071 -0.7071 0.7071 -421.411 1013.5135)" fill="#F6921E" stroke="#231F20" stroke-width="2" stroke-miterlimit="10" width="228.8" height="143.1"/>
 	<g>
 		<g>
 			<g>
@@ -487,16 +506,16 @@
 </g>
 <g>
 	
-		<rect x="279.6" y="326.2" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -165.8565 395.1016)" fill="#6DCEF5" stroke="#231F20" stroke-width="2" stroke-miterlimit="10" width="228.8" height="143.1"/>
+		<rect x="279.6" y="326.2" transform="matrix(0.7071 -0.7071 0.7071 -165.8565 395.1016)" fill="#6DCEF5" stroke="#231F20" stroke-width="2" stroke-miterlimit="10" width="228.8" height="143.1"/>
 	<g>
 		
-			<rect x="340.8" y="364.8" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -161.7313 385.1411)" fill="#D1AF4F" width="86.5" height="46.1"/>
+			<rect x="340.8" y="364.8" transform="matrix(0.7071 -0.7071 0.7071 -161.7313 385.1411)" fill="#D1AF4F" width="86.5" height="46.1"/>
 		
-			<rect x="367" y="400" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -172.6024 411.3855)" fill="#E7C057" width="86.5" height="28.2"/>
+			<rect x="367" y="400" transform="matrix(0.7071 -0.7071 0.7071 -172.6024 411.3855)" fill="#E7C057" width="86.5" height="28.2"/>
 		
-			<rect x="369" y="406.4" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -171.2917 408.2182)" fill="#A9895B" width="76.2" height="8.9"/>
+			<rect x="369" y="406.4" transform="matrix(0.7071 -0.7071 0.7071 -171.2917 408.2182)" fill="#A9895B" width="76.2" height="8.9"/>
 		
-			<rect x="375.3" y="412.7" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -173.9122 414.553)" fill="#B99664" width="76.2" height="8.9"/>
+			<rect x="375.3" y="412.7" transform="matrix(0.7071 -0.7071 0.7071 -173.9122 414.553)" fill="#B99664" width="76.2" height="8.9"/>
 		<path fill="#AB9040" d="M346.2,400.6c0.9,0.9,0.9,2.2,0,3.1c-0.9,0.9-2.2,0.9-3.1,0c-0.9-0.9-0.9-2.2,0-3.1
 			C343.9,399.7,345.3,399.7,346.2,400.6z"/>
 		<path fill="#AB9040" d="M371.3,425.7c0.9,0.9,0.9,2.2,0,3.1c-0.9,0.9-2.2,0.9-3.1,0c-0.9-0.9-0.9-2.2,0-3.1
@@ -514,13 +533,13 @@
 			</clipPath>
 			<g clip-path="url(#SVGID_8_)">
 				
-					<rect x="336.4" y="373.8" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -157.8002 375.6628)" fill="#A9895B" width="76.2" height="8.9"/>
+					<rect x="336.4" y="373.8" transform="matrix(0.7071 -0.7071 0.7071 -157.8002 375.6628)" fill="#A9895B" width="76.2" height="8.9"/>
 				
-					<rect x="342.8" y="380.2" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -160.4207 381.9893)" fill="#B99664" width="76.2" height="8.9"/>
+					<rect x="342.8" y="380.2" transform="matrix(0.7071 -0.7071 0.7071 -160.4207 381.9893)" fill="#B99664" width="76.2" height="8.9"/>
 				
-					<rect x="349.1" y="386.5" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -163.0412 388.3001)" fill="#A9895B" width="76.2" height="8.9"/>
+					<rect x="349.1" y="386.5" transform="matrix(0.7071 -0.7071 0.7071 -163.0412 388.3001)" fill="#A9895B" width="76.2" height="8.9"/>
 				
-					<rect x="355.4" y="392.8" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -165.6616 394.6333)" fill="#B99664" width="76.2" height="8.9"/>
+					<rect x="355.4" y="392.8" transform="matrix(0.7071 -0.7071 0.7071 -165.6616 394.6333)" fill="#B99664" width="76.2" height="8.9"/>
 			</g>
 		</g>
 		<path fill="#AB9040" d="M425,371.9c0.9,0.9,0.9,2.2,0,3.1c-0.9,0.9-2.2,0.9-3.1,0c-0.9-0.9-0.9-2.2,0-3.1
