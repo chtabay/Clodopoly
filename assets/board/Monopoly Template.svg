@@ -745,7 +745,7 @@
 		C1047.8,120.6,1044.3,124,1040,124z"/>
 </g>
 <rect x="405" y="616.4" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -289.478 684.7067)" fill="#A61C00" stroke="#000000" stroke-width="3" stroke-miterlimit="10" width="553.6" height="150.8"/>
-<text transform="matrix(0.7135 -0.7135 0.7071 0.7071 569.0739 831.4223)" fill="#FFFFFF" font-family="'Arial-Bold'" font-size="61.6498px">MONOPOLY</text>
+<text transform="matrix(0.7135 -0.7135 0.7071 0.7071 569.0739 831.4223)" fill="#FFFFFF" font-family="'Arial-Bold'" font-size="61.6498px">CLODOPOLY</text>
 <text transform="matrix(0.7071 0.7071 -0.7071 0.7071 155.7949 1235.3527)">
     <tspan x="-30" y="20" fill="#231F20" font-family="'Arial'" font-size="23.3117px">PRISON</tspan>
 </text>
