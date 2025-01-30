@@ -1,5 +1,5 @@
 # Les Billets Restent dans la Boîte
-*Une parodie cynique du Monopoly*
+*Tu commences avec un boulot, t'arrives pas à payer les factures, tu vends la voiture, t'arrives plus à aller au boulot, tu vends la maison, puis les bijoux au prêteur sur gage, puis la prostitution, les bastons de clodo et le dernier qui meurt à gagné. Le tout sur un plateau de monopoly avec des hôtels qui restent dans la boîte et des billets qui servent qu'au debut.*
 
 ## Aperçu du Jeu
 2-6 joueurs | 60-90 minutes | 12+ ans
