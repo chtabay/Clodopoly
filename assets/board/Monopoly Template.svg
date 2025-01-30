@@ -52,37 +52,37 @@
 </g>
 <g>
 	<text transform="matrix(1 0 0 1 557.4795 1289.6748)">
-		<tspan x="0" y="0" fill="#231F20" font-family="Arial" font-size="12.5px">RUE DE</tspan>
-		<tspan x="-18" y="15.5" fill="#231F20" font-family="Arial" font-size="12.5px">VAUGIRARD</tspan>
+		<tspan x="10" y="0" fill="#231F20" font-family="Arial" font-size="12.5px">RUE DE</tspan>
+		<tspan x="0" y="15.5" fill="#231F20" font-family="Arial" font-size="12.5px">VAUGIRARD</tspan>
 	</text>
 	<text transform="matrix(1 0 0 1 557.4795 1386.916)" fill="#231F20" font-family="Arial" font-size="13.987px">120€</text>
 </g>
 <g>
 	<text transform="matrix(1 0 0 1 674.9556 1246.5244)">
-		<tspan x="-8" y="0" fill="#231F20" font-family="Arial" font-size="12.5px">GARE</tspan>
-		<tspan x="-24" y="15.5" fill="#231F20" font-family="Arial" font-size="12.5px">MONTPARNASSE</tspan>
+		<tspan x="6" y="0" fill="#231F20" font-family="Arial" font-size="13px">GARE</tspan>
+		<tspan x="-25" y="15.5" fill="#231F20" font-family="Arial" font-size="13px">MONTPARNASSE</tspan>
 	</text>
 	<text transform="matrix(1 0 0 1 674.9556 1386.916)" fill="#231F20" font-family="Arial" font-size="13.987px">200€</text>
 </g>
 <g>
 	<text transform="matrix(1 0 0 1 765.8379 1254.5254)">
-		<tspan x="-12" y="0" fill="#231F20" font-family="Arial" font-size="23.3116px">IMPÔTS</tspan>
-		<tspan x="-12" y="24.9" fill="#231F20" font-family="Arial" font-size="23.3116px">SUR LE</tspan>
-		<tspan x="-12" y="49.8" fill="#231F20" font-family="Arial" font-size="23.3116px">REVENU</tspan>
+		<tspan x="20" y="0" fill="#231F20" font-family="Arial" font-size="13.987px">IMPÔTS</tspan>
+		<tspan x="23" y="24.9" fill="#231F20" font-family="Arial" font-size="13.987px">SUR LE</tspan>
+		<tspan x="20" y="49.8" fill="#231F20" font-family="Arial" font-size="13.987px">REVENU</tspan>
 	</text>
 	<text transform="matrix(1 0 0 1 765.8379 1386.916)" fill="#231F20" font-family="Arial" font-size="13.987px">150€</text>
 </g>
 <g>
 	<text transform="matrix(1 0 0 1 900.3809 1289.6748)">
-		<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">RUE</tspan>
-		<tspan x="5.8" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">LECOURBE</tspan>
+		<tspan x="14" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">RUE</tspan>
+		<tspan x="-10" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">LECOURBE</tspan>
 	</text>
 	<text transform="matrix(1 0 0 1 912.7246 1386.916)" fill="#231F20" font-family="'Arial'" font-size="13.987px">90€</text>
 </g>
 <g>
 	<text transform="matrix(1 0 0 1 1115.5107 1289.6748)">
-		<tspan x="-22" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">BOULEVARD DE</tspan>
-		<tspan x="-18" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">BELLEVILLE</tspan>
+		<tspan x="-17" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">BOULEVARD DE</tspan>
+		<tspan x="-5" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">BELLEVILLE</tspan>
 	</text>
 	<text transform="matrix(1 0 0 1 1138.8408 1386.916)" fill="#231F20" font-family="'Arial'" font-size="13.987px">60€</text>
 </g>
@@ -119,10 +119,10 @@
 </g>
 <g>
 	<text transform="matrix(0 -1 1 0 1290.1006 1167.9326)">
-		<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">
-			AVENUE DE
+		<tspan x="-11" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">
+			RUE DE
 		</tspan>
-		<tspan x="-16" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">
+		<tspan x="-11" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">
 			LA PAIX
 		</tspan>
 	</text>
@@ -132,11 +132,11 @@
 </g>
 <g>
 	<text transform="matrix(0 -1 1 0 1290.1006 960.9775)">
-		<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">
+		<tspan x="-10" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">
 			AVENUE DES
 		</tspan>
-		<tspan x="5" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">
-			CHAMPS-ÉLYSÉES
+		<tspan x="-19" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">
+			CHPS-ÉLYSÉES
 		</tspan>
 	</text>
 	<text transform="matrix(0 -1 1 0 1387.3418 946.6553)" fill="#231F20" font-family="'Arial'" font-size="13.987px">
@@ -197,22 +197,23 @@
 </g>
 <g>
 	<text transform="matrix(0 1 -1 0 116.5981 224.2036)">
-		<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">PLACE</tspan>
-		<tspan x="10.7" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">PIGALLE</tspan>
+		<tspan x="10" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">PLACE</tspan>
+		<tspan x="4" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">PIGALLE</tspan>
 	</text>
 	<text transform="matrix(0 1 -1 0 19.3569 235.4419)" fill="#231F20" font-family="'Arial'" font-size="13.987px">200€</text>
 </g>
 <g>
-	<text transform="matrix(0 1 -1 0 116.5981 330.7305)"><tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">BOULEVARD DE BELLEVILLE</tspan><tspan x="16.4" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">60€</tspan></text>
-	<text transform="matrix(0 1 -1 0 19.3569 347.6821)" fill="#231F20" font-family="'Arial'" font-size="13.987px">M200</text>
+	<text transform="matrix(0 1 -1 0 116.5981 330.7305)"><tspan x="-6" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">BOULEVARD</tspan><tspan x="-10" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">SAINT-MICHEL</tspan></text>
+	<text transform="matrix(0 1 -1 0 19.3569 347.6821)" fill="#231F20" font-family="'Arial'" font-size="13.987px">200€</text>
 </g>
 <g>
+
 	<text transform="matrix(0 1 -1 0 116.5981 560.3584)">
-		<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">
-			BOULEVARD
+		<tspan x="5" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">
+			AVENUE
 		</tspan>
-		<tspan x="8" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">
-			SAINT-MICHEL
+		<tspan x="4" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">
+			MOZART
 		</tspan>
 	</text>
 	<text transform="matrix(0 1 -1 0 19.3569 573.9258)"
@@ -226,35 +227,29 @@
 <g>
 	<text transform="matrix(0 1 -1 0 116.5981 791.1123)">
 		<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">RUE DE</tspan>
-		<tspan x="5" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">PARADIS</tspan>
+		<tspan x="-3" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">PARADIS</tspan>
 	</text>
 	<text transform="matrix(0 1 -1 0 19.3569 798.4199)" fill="#231F20" font-family="'Arial'" font-size="13.987px">160€</text>
 </g>
 <g>
 	<text transform="matrix(0 1 -1 0 116.5981 887.3936)">
 		<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">AVENUE DE</tspan>
-		<tspan x="5" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">NEUILLY</tspan>
+		<tspan x="12" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">NEUILLY</tspan>
 	</text>
 	<text transform="matrix(0 1 -1 0 19.3569 910.6182)" fill="#231F20" font-family="'Arial'" font-size="13.987px">160€</text>
 </g>
 <g>
 	<text transform="matrix(0 1 -1 0 159.7471 1025.7246)">
-		<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">
+		<tspan x="-27" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">
 			COMPAGNIE
 		</tspan>
-		<tspan x="-20.9" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">
+		<tspan x="-36" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">
 			D'ÉLECTRICITÉ
 		</tspan>
 	</text>
 	<text transform="matrix(0 1 -1 0 19.3569 1022.9063)" fill="#231F20" font-family="'Arial'" font-size="13.987px">150€</text>
 </g>
-<g>
-	<text transform="matrix(0 1 -1 0 116.5981 1130.5117)">
-		<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">BOULEVARD</tspan>
-		<tspan x="-10.7" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">DE LA VILLETTE</tspan>
-	</text>
-	<text transform="matrix(0 1 -1 0 19.3569 1135.1406)" fill="#231F20" font-family="'Arial'" font-size="13.987px">140€</text>
-</g>
+
 <rect x="1208.4" y="3.6" fill="#C9DAF8" stroke="#231F20" stroke-width="1.9722" stroke-miterlimit="10" width="194.3" height="194.3"/>
 <rect x="4" y="3.6" fill="#C9DAF8" stroke="#231F20" stroke-width="1.9722" stroke-miterlimit="10" width="194.3" height="194.3"/>
 <rect x="198.3" y="3.6" fill="#C9DAF8" stroke="#231F20" stroke-width="1.9722" stroke-miterlimit="10" width="112.2" height="194.3"/>
@@ -274,52 +269,53 @@
 <rect x="1096.2" y="143.4" fill="#FFCA05" stroke="#231F20" stroke-width="2" stroke-miterlimit="10" width="112.2" height="54.4"/>
 <g>
 	<text transform="matrix(-1 0 0 -1 1183.7725 116.1699)">
-		<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">LA FAYETTE</tspan>
-		<tspan x="0" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">230€</tspan>
+		<tspan x="13" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">RUE</tspan>
+		<tspan x="-12" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">LA FAYETTE</tspan>
 	</text>
-	<text transform="matrix(-1 0 0 -1 1057.2402 18.9287)" fill="#231F20" font-family="'Calibri-Bold'" font-size="13.987px">M130</text>
-	<text transform="matrix(-1 0 0 -1 963.6074 116.1699)"><tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">LA</tspan><tspan x="8" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">BOURSE</tspan></text>
+	<text transform="matrix(-1 0 0 -1 1183.2168 18.9287)" fill="#231F20" font-family="'Arial'" font-size="13.987px">230€</text>
+	<text transform="matrix(-1 0 0 -1 1057.2402 18.9287)" fill="#231F20" font-family="'Calibri-Bold'" font-size="13.987px">130€</text>
+	<text transform="matrix(-1 0 0 -1 963.6074 116.1699)"><tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">PLACE DE</tspan><tspan x="-4" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">LA BOURSE</tspan></text>
 	<text transform="matrix(-1 0 0 -1 839.9307 116.1699)">
-		<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">FAUBOURG</tspan>
-		<tspan x="4.5" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">SAINT-HONORÉ</tspan>
+		<tspan x="-15" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">FAUBOURG</tspan>
+		<tspan x="-28" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">SAINT-HONORÉ</tspan>
 	</text>
 	<text transform="matrix(-1 0 0 -1 833.2168 18.9287)" fill="#231F20" font-family="'Arial'" font-size="13.987px">260€</text>
 	<text transform="matrix(-1 0 0 -1 727.0771 159.3208)">
-		<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">COMPAGNIE</tspan>
-		<tspan x="-1.7" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">DES EAUX</tspan>
+		<tspan x="-18" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">COMPAGNIE</tspan>
+		<tspan x="-10" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">DES EAUX</tspan>
 	</text>
 	<text transform="matrix(-1 0 0 -1 718.4893 18.9287)" fill="#231F20" font-family="'Arial'" font-size="13.987px">150€</text>
 	<text transform="matrix(-1 0 0 -1 618.4785 116.1699)">
 		<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">AVENUE</tspan>
-		<tspan x="7.6" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">HENRI-MARTIN</tspan>
+		<tspan x="-24" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">HENRI-MARTIN</tspan>
 	</text>
 	<text transform="matrix(-1 0 0 -1 610.4082 18.9287)" fill="#231F20" font-family="'Arial'" font-size="13.987px">240€</text>
 	<text transform="matrix(-1 0 0 -1 510.0303 116.1699)">
-		<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">BOULEVARD</tspan>
-		<tspan x="11.4" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">MALESHERBES</tspan>
+		<tspan x="-10" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">BOULEVARD</tspan>
+		<tspan x="-25" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">MALESHERBES</tspan>
 	</text>
 	<text transform="matrix(-1 0 0 -1 498.1211 18.9287)" fill="#231F20" font-family="'Arial'" font-size="13.987px">220€</text>
 	<text transform="matrix(-1 0 0 -1 284.2061 116.1699)">
 		<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">AVENUE</tspan>
-		<tspan x="10" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">MATIGNON</tspan>
+		<tspan x="-8" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">MATIGNON</tspan>
 	</text>
 	<text transform="matrix(-1 0 0 -1 273.6392 18.9287)" fill="#231F20" font-family="'Arial'" font-size="13.987px">220€</text>
 	<text transform="matrix(1 0 0 1 996.7861 1246.5244)">
-		<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">CAISSE DE</tspan>
-		<tspan x="0" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">COMMUNAUTÉ</tspan>
+		<tspan x="8" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">CAISSE DE</tspan>
+		<tspan x="-8" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">COMMUNAUTÉ</tspan>
 	</text>
 	
 	<text transform="matrix(0 1 -1 0 159.7471 435.8853)">
-		<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px"> DE</tspan>
-		<tspan x="0" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">COMMUNAUTÉ</tspan>
+		<tspan x="8" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px"> CAISSE DE</tspan>
+		<tspan x="-6" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">COMMUNAUTÉ</tspan>
 	</text>
-	<text transform="matrix(0 1 -1 0 159.7471 660.1304)"><tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">GARE</tspan><tspan x="9.4" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">DE LYON</tspan></text>
+	<text transform="matrix(0 1 -1 0 159.7471 660.1304)"><tspan x="20" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">GARE</tspan><tspan x="9.4" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">DE LYON</tspan></text>
 	<text transform="matrix(-1 0 0 -1 1085.1709 159.3208)" fill="#231F20" font-family="'Arial'" font-size="13.987px">GRILLE-PAIN</text>
 	<text transform="matrix(-1 0 0 -1 403.0034 49.0498)" fill="#90278E" font-family="'Arial-Bold'" font-size="135.2074px" letter-spacing="2">?</text>
 	<text transform="matrix(-1 0 0 -1 396.187 159.3208)" fill="#231F20" font-family="'Arial'" font-size="13.987px">CHANCE</text>
 	<text transform="matrix(0 -1 1 0 1357.2217 848.7959)" fill="#231F20" stroke="#D5EDEA" stroke-width="1.9722" stroke-miterlimit="10" font-family="'Arial-Bold'" font-size="125px" letter-spacing="2">?</text>
 	<text transform="matrix(0 -1 1 0 1246.9521 844.7246)" fill="#231F20" font-family="'Arial'" font-size="13.987px">CHANCE</text>
-	<text transform="matrix(0 -1 1 0 1246.9521 1066.2139)"><tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">TAXE</tspan><tspan x="12.7" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">DE LUXE</tspan></text>
+	<text transform="matrix(0 -1 1 0 1246.9521 1066.2139)"><tspan x="8" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">TAXE</tspan><tspan x="-5" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">DE LUXE</tspan></text>
 </g>
 <g>
 	<g>
@@ -486,36 +482,30 @@
          <tspan x="0" y="0" ...>FREE</tspan>
          <tspan x="-21.1" y="24.9" ...>PARKING</tspan>
     -->
-    <tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="20px">
+    <tspan x="-20" y="10" fill="#231F20" font-family="'Arial'" font-size="20px">
         BUREAU
     </tspan>
 </text>
 <text transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 1277.1069 176.088)">
     <!-- Ancien texte : "GO TO JAIL" -->
-    <tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="20px">
+    <tspan x="-14" y="0" fill="#231F20" font-family="'Arial'" font-size="20px">
         ALLEZ EN
     </tspan>
-    <tspan x="13" y="24.9" fill="#231F20" font-family="'Arial'" font-size="20px">
+    <tspan x="-6" y="24.9" fill="#231F20" font-family="'Arial'" font-size="20px">
         PRISON
     </tspan>
 </text>
 <text transform="matrix(0.7071 -0.7071 0.7071 0.7071 1223.3895 1285.038)">
-	<tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="20px">CASE</tspan>
-	<tspan x="0" y="24.9" fill="#231F20" font-family="'Arial'" font-size="20px">DÉPART</tspan>
-	<tspan x="-15" y="49.7" fill="#231F20" font-family="'Arial'" font-size="16px">RECEVEZ 200€</tspan>
+	<tspan x="0" y="10" fill="#231F20" font-family="'Arial'" font-size="20px">SALAIRE</tspan>
+	<tspan x="10" y="34.9" fill="#231F20" font-family="'Arial'" font-size="20px">LOYER</tspan>
+	<tspan x="25" y="59.7" fill="#231F20" font-family="'Arial'" font-size="16px">200€</tspan>
 </text>
-<text transform="matrix(0.7071 0.7071 -0.7071 0.7071 155.7949 1235.3527)">
-    <!-- Ancien texte : "IN JAIL / JUST VISITING" -->
-    <tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="23.3117px">
-        PRISON
-    </tspan>
-    <!-- On peut proposer : "PRISON / SIMPLE VISITE" ou "PRISON - SIMPLE VISITE" -->
-</text>
+
 <text transform="matrix(0.7071 0.7071 -0.7071 0.7071 45.7332 1327.5448)">
-    <tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="20px">
+    <tspan x="-15" y="0" fill="#231F20" font-family="'Arial'" font-size="20px">
         SIMPLE
     </tspan>
-    <tspan x="-17.7" y="24.9" fill="#231F20" font-family="'Arial'" font-size="20px">
+    <tspan x="-10" y="24.9" fill="#231F20" font-family="'Arial'" font-size="20px">
         VISITE
     </tspan>
 </text>
@@ -757,30 +747,16 @@
 <rect x="405" y="616.4" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -289.478 684.7067)" fill="#A61C00" stroke="#000000" stroke-width="3" stroke-miterlimit="10" width="553.6" height="150.8"/>
 <text transform="matrix(0.7135 -0.7135 0.7071 0.7071 569.0739 831.4223)" fill="#FFFFFF" font-family="'Arial-Bold'" font-size="61.6498px">MONOPOLY</text>
 <text transform="matrix(0.7071 0.7071 -0.7071 0.7071 155.7949 1235.3527)">
-    <tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="23.3117px">PRISON</tspan>
+    <tspan x="-30" y="20" fill="#231F20" font-family="'Arial'" font-size="23.3117px">PRISON</tspan>
 </text>
-<text transform="matrix(0.7071 0.7071 -0.7071 0.7071 45.7332 1327.5448)">
-    <tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="20px">SIMPLE</tspan>
-    <tspan x="-17.7" y="24.9" fill="#231F20" font-family="'Arial'" font-size="20px">VISITE</tspan>
-</text>
+
 <text transform="matrix(0 1 -1 0 116.5981 1130.5117)">
-    <tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">BOULEVARD</tspan>
-    <tspan x="-10.7" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">DE LA VILLETTE</tspan>
+    <tspan x="-20" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">BOULEVARD</tspan>
+    <tspan x="-32" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">DE LA VILLETTE</tspan>
 </text>
 <text transform="matrix(0 1 -1 0 19.3569 1135.1406)" fill="#231F20" font-family="'Arial'" font-size="13.987px">140€</text>
-<text transform="matrix(0 1 -1 0 159.7471 1025.7246)">
-    <tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">COMPAGNIE</tspan>
-    <tspan x="-20.9" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">D'ÉLECTRICITÉ</tspan>
-</text>
+
 <text transform="matrix(0 1 -1 0 19.3569 1022.9063)" fill="#231F20" font-family="'Arial'" font-size="13.987px">150€</text>
-<text transform="matrix(0 1 -1 0 116.5981 791.1123)">
-    <tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">RUE DE</tspan>
-    <tspan x="5" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">PARADIS</tspan>
-</text>
 <text transform="matrix(0 1 -1 0 19.3569 798.4199)" fill="#231F20" font-family="'Arial'" font-size="13.987px">160€</text>
-<text transform="matrix(0 1 -1 0 159.7471 660.1304)">
-    <tspan x="0" y="0" fill="#231F20" font-family="'Arial'" font-size="13.987px">GARE</tspan>
-    <tspan x="9.4" y="15.5" fill="#231F20" font-family="'Arial'" font-size="13.987px">DE LYON</tspan>
-</text>
 <text transform="matrix(0 1 -1 0 19.3569 686.4839)" fill="#231F20" font-family="'Arial'" font-size="13.987px">200€</text>
 </svg>
