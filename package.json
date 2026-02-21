@@ -1,0 +1,23 @@
+{
+  "name": "clodopoly",
+  "version": "0.1.0",
+  "description": "Jeu de survie sociale sur plateau de Monopoly",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/ tests/",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\""
+  },
+  "author": "chtabay",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vitest": "^4.0.18"
+  }
+}
