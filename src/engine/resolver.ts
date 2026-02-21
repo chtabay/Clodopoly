@@ -28,7 +28,6 @@ import {
 import {
   PETIT_BOULOT_PAY,
   CLINIC_COST,
-  SHELTER_EXIT_COST,
   TAX_LUXURY_AMOUNT,
   TAX_INCOME_RATE,
   TAX_INCOME_MIN,
@@ -618,9 +617,6 @@ export function resolveMaintenance(state: GameState): GameState {
     if (player.position === SHELTER_CELL) continue;
 
     const isInCamp = inCamp.has(player.id);
-    const campSize = isInCamp
-      ? (camps.get(player.position)?.length ?? 1)
-      : 1;
 
     const foodCost = isInCamp
       ? Math.ceil(s.foodCost * FOOD_CAMP_RATIO)

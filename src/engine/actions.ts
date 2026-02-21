@@ -6,11 +6,9 @@ import {
   PlayerId,
   NightAction,
   DiceRoller,
-  CellType,
   PlayerStatus,
-  JobType,
+  JournalEntryType,
 } from "./types";
-import { BOARD } from "./board";
 import {
   getCurrentPlayer,
   hasCarInInventory,
@@ -25,9 +23,7 @@ import {
   CAR_FUEL_COST,
   BUS_TICKET_COST,
   PAYDAY_CELL,
-  ROAD_FINE,
 } from "./constants";
-import { JournalEntryType } from "./types";
 
 export type GameAction =
   | { type: "CHOOSE_TRANSPORT"; playerId: PlayerId; mode: TransportMode }
@@ -111,7 +107,7 @@ export function getDirection(mode: TransportMode): "forward" | "both" {
   return mode === TransportMode.FOOT ? "both" : "forward";
 }
 
-export function passesCell(from: CellIndex, to: CellIndex, target: CellIndex, direction: "forward"): boolean {
+export function passesCell(from: CellIndex, to: CellIndex, target: CellIndex, _direction: "forward"): boolean {
   if (from === target || to === target) return to === target;
   if (from < to) {
     return target > from && target < to;

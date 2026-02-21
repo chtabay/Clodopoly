@@ -21,8 +21,6 @@ import {
   JournalEntryType,
 } from "../../src/engine/types";
 import {
-  PAYDAY_CELL,
-  BOARD_SIZE,
   CAR_FUEL_COST,
   BUS_TICKET_COST,
 } from "../../src/engine/constants";

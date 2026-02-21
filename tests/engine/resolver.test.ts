@@ -1,9 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { SeededDiceRoller } from "../../src/engine/dice";
-import { createInitialState, computePC, updatePlayerInState } from "../../src/engine/state";
+import { createInitialState } from "../../src/engine/state";
 import {
   resolvePetitBoulot,
-  resolveMarketBuy,
   resolveShower,
   resolveClinic,
   resolveEventCard,
@@ -33,7 +32,6 @@ import {
   CLINIC_COST,
   FOOD_COST_BASE,
   WORKPLACE_CELL,
-  SHELTER_CELL,
   MAX_PC,
   MAX_PV,
   TAX_LUXURY_AMOUNT,
