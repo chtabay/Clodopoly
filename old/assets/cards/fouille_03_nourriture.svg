@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="250" height="350" xmlns="http://www.w3.org/2000/svg">
+    <!-- [Template Fouille] -->
+    <text x="125" y="150" font-family="Arial" font-size="48" 
+          text-anchor="middle" fill="#2e7d32">🥫</text>
+    <text x="125" y="247" font-family="Arial" font-size="18" 
+          text-anchor="middle" fill="white">NOURRITURE PÉRIMÉE</text>
+    <text x="40" y="290" font-family="Arial" font-size="14" 
+          fill="#2e7d32">Effet: +1 PV</text>
+    <text x="40" y="324" font-family="Arial" font-size="12" 
+          fill="#2e7d32">Usage unique</text>
+</svg> 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="250" height="350" xmlns="http://www.w3.org/2000/svg">
+    <!-- [Template Fouille identique] -->
+    
+    <!-- Contenu spécifique -->
+    <text x="125" y="247" font-family="Arial" font-size="18" 
+          text-anchor="middle" fill="white">COSTUME USÉ</text>
+    <text x="40" y="290" font-family="Arial" font-size="14" 
+          fill="#2e7d32">Effet: +1 PC</text>
+    <text x="40" y="324" font-family="Arial" font-size="12" 
+          fill="#2e7d32">Perdu si dormir dehors</text>
+</svg> 
