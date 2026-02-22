@@ -6,6 +6,8 @@ import { getCardName } from "../../locale/i18n";
 import { getCurrentPlayer, computePC } from "../../engine/state";
 
 const DRAFT_PC_TARGET = 8;
+const CAR_PC = 3;
+const PLAYER_CHOICE_TARGET = DRAFT_PC_TARGET - CAR_PC;
 
 export function createDraftScreen(app: App): ScreenRenderer {
   let root: HTMLElement | null = null;
@@ -117,9 +119,10 @@ export function createDraftScreen(app: App): ScreenRenderer {
     if (!root || !draftGrid || !playerProfile || !validateBtn || !draftBar) return;
 
     const player = getCurrentPlayer(state);
-    const pc = computePC(player);
+    const pcTotal = computePC(player);
     const carOk = hasCar(player.inventory);
-    const canValidate = pc === DRAFT_PC_TARGET && carOk;
+    const chosenPC = pcTotal - (carOk ? CAR_PC : 0);
+    const canValidate = pcTotal === DRAFT_PC_TARGET && carOk;
 
     const allCards = getAllDeckCards(state);
     const playerInventorySet = new Set(player.inventory);
@@ -135,7 +138,7 @@ export function createDraftScreen(app: App): ScreenRenderer {
       const cardEl = document.createElement("div");
       const isSelected = playerInventorySet.has(cardId);
       const cardPc = def.pcValue ?? 0;
-      const wouldExceed = !isSelected && pc + cardPc > DRAFT_PC_TARGET;
+      const wouldExceed = !isSelected && chosenPC + cardPc > PLAYER_CHOICE_TARGET;
 
       cardEl.className = "draft-card";
       if (isSelected) cardEl.classList.add("selected");
@@ -204,7 +207,9 @@ export function createDraftScreen(app: App): ScreenRenderer {
     const pcCounterEl = document.createElement("div");
     pcCounterEl.className = "pc-counter";
     pcCounterEl.style.marginTop = "8px";
-    pcCounterEl.textContent = `${pc} / ${DRAFT_PC_TARGET} PC`;
+    pcCounterEl.style.fontSize = "var(--font-size-lg)";
+    pcCounterEl.style.fontWeight = "600";
+    pcCounterEl.textContent = `${chosenPC} / ${PLAYER_CHOICE_TARGET} PC`;
     playerProfile.appendChild(pcCounterEl);
 
     const pcBar = document.createElement("div");
@@ -215,8 +220,8 @@ export function createDraftScreen(app: App): ScreenRenderer {
     pcBar.style.marginTop = "4px";
     const pcFill = document.createElement("div");
     pcFill.style.height = "100%";
-    pcFill.style.width = `${Math.min(100, (pc / DRAFT_PC_TARGET) * 100)}%`;
-    pcFill.style.background = pc === DRAFT_PC_TARGET ? "var(--accent)" : "var(--text-muted)";
+    pcFill.style.width = `${Math.min(100, (chosenPC / PLAYER_CHOICE_TARGET) * 100)}%`;
+    pcFill.style.background = chosenPC === PLAYER_CHOICE_TARGET ? "var(--accent)" : "var(--text-muted)";
     pcFill.style.transition = "width 0.3s ease";
     pcBar.appendChild(pcFill);
     playerProfile.appendChild(pcBar);
@@ -248,7 +253,7 @@ export function createDraftScreen(app: App): ScreenRenderer {
     }
 
     const barPc = draftBar.querySelector(".pc-counter");
-    if (barPc) barPc.textContent = `${pc} / ${DRAFT_PC_TARGET} PC`;
+    if (barPc) barPc.textContent = `${chosenPC} / ${PLAYER_CHOICE_TARGET} PC`;
 
     validateBtn.disabled = !canValidate;
     validateBtn.onclick = () => {
