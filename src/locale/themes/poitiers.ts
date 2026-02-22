@@ -24,22 +24,20 @@ export const THEME_POITIERS: LocationTheme = {
   ],
 
   establishmentsByCellIndex: {
-    // Stations (marchés)
-    5:  { name: "Marché des Couronneries", services: ["buy", "sell"] },
-    15: { name: "Marché Notre-Dame", services: ["buy", "sell"] },
-    25: { name: "Grand Leclerc", services: ["buy", "sell"] },
-    29: { name: "Ilot des Cordeliers", services: ["buy", "sell"] },
+    // Stations (marchés) — pas d'etablissement affiche, le nom de station suffit
+    5:  { name: "", services: ["buy", "sell"] },
+    15: { name: "", services: ["buy", "sell"] },
+    25: { name: "", services: ["buy", "sell"] },
+    29: { name: "", services: ["buy", "sell"] },
     // LIGHT_BLUE
     6:  { name: "Le Yakido", services: ["work"] },
     8:  { name: "Le Longchamps", services: ["work"] },
     9:  { name: "Ilot de Tison", services: ["work", "sleep"] },
     // PINK
     14: { name: "Tante May Tattoo", services: ["work"] },
-    // RED — index 23 (Rue Jean Coll) et 24 (Place du Pilori) : rien à faire
-    23: { name: "Rue Jean Coll", services: [] },
-    24: { name: "Statue de la Liberté poitevine", services: [] },
+    // RED
+    24: { name: "Statue de la Liberté", services: [] },
     // YELLOW
-    28: { name: "Pierre Levée", services: [] },
     30: { name: "Agence immobilière", services: ["sleep"], guaranteedLodgingCost: 80 },
     // GREEN
     32: { name: "Monument aux morts", services: [] },
