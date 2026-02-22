@@ -222,16 +222,6 @@ export function createGameScreen(app: App): ScreenRenderer {
     if (!topBar) return;
     topBar.innerHTML = "";
 
-    const phaseLabels: Record<string, string> = {
-      [GamePhase.MOVEMENT]: app.lang.ui.movement ?? "Déplacement",
-      [GamePhase.ACTION]: "Action",
-      [GamePhase.NIGHT]: app.lang.ui.nightPhase ?? "Nuit",
-      [GamePhase.NIGHT_RESOLUTION]: app.lang.ui.nightResolution ?? "Résolution",
-      [GamePhase.MAINTENANCE]: app.lang.ui.maintenance ?? "Maintenance",
-      [GamePhase.END_TURN]: "Fin du tour",
-      [GamePhase.GAME_OVER]: app.lang.ui.gameOver ?? "Fin",
-    };
-
     const player = getCurrentPlayer(state);
 
     const leftGroup = document.createElement("div");
@@ -247,10 +237,39 @@ export function createGameScreen(app: App): ScreenRenderer {
     const turnSpan = document.createElement("span");
     turnSpan.textContent = `${app.lang.ui.turn ?? "Tour"} ${state.turn}`;
 
-    const phaseSpan = document.createElement("span");
-    phaseSpan.textContent = phaseLabels[state.phase] ?? state.phase;
+    const phaseCycle = document.createElement("div");
+    phaseCycle.className = "phase-cycle";
+    const phases: { key: string; label: string; icon: string }[] = [
+      { key: "movement", label: "Deplacement", icon: "🚶" },
+      { key: "action",   label: "Action",      icon: "⚡" },
+      { key: "night",    label: "Nuit",         icon: "🌙" },
+      { key: "maint",    label: "Maintenance",  icon: "🔧" },
+    ];
+    const activePhaseMap: Record<string, string> = {
+      [GamePhase.MOVEMENT]: "movement",
+      [GamePhase.ACTION]: "action",
+      [GamePhase.NIGHT]: "night",
+      [GamePhase.NIGHT_RESOLUTION]: "night",
+      [GamePhase.MAINTENANCE]: "maint",
+      [GamePhase.END_TURN]: "maint",
+    };
+    const activeKey = activePhaseMap[state.phase] ?? "movement";
+    for (let i = 0; i < phases.length; i++) {
+      if (i > 0) {
+        const sep = document.createElement("span");
+        sep.className = "phase-cycle-sep";
+        sep.textContent = "›";
+        phaseCycle.appendChild(sep);
+      }
+      const step = document.createElement("span");
+      step.className = "phase-cycle-step";
+      if (phases[i].key === activeKey) step.classList.add("active");
+      step.textContent = `${phases[i].icon}`;
+      step.title = phases[i].label;
+      phaseCycle.appendChild(step);
+    }
 
-    leftGroup.append(playerBanner, turnSpan, phaseSpan);
+    leftGroup.append(playerBanner, turnSpan, phaseCycle);
 
     const centerGroup = document.createElement("div");
     centerGroup.className = "top-bar-center";

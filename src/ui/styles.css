@@ -354,6 +354,12 @@ body {
   gap: var(--space-md);
   max-width: 400px;
   width: 100%;
+  animation: fadeInAction 0.25s ease-out;
+}
+
+@keyframes fadeInAction {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 
@@ -1983,6 +1989,32 @@ body {
 /* --------------------------------------------------------------------------
    RULES MODAL
    -------------------------------------------------------------------------- */
+.phase-cycle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--bg-panel-alt);
+  padding: 3px 8px;
+  border-radius: var(--border-radius);
+  font-size: 0.85rem;
+}
+
+.phase-cycle-step {
+  opacity: 0.3;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.phase-cycle-step.active {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.phase-cycle-sep {
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  margin: 0 1px;
+}
+
 .top-bar-rules-btn {
   width: 28px;
   height: 28px;

@@ -82,10 +82,17 @@ export function createSetupScreen(app: App): ScreenRenderer {
         app.startGame(names, colors);
       });
 
+      const btnBack = document.createElement("button");
+      btnBack.type = "button";
+      btnBack.className = "action-btn";
+      btnBack.textContent = "← Retour";
+      btnBack.addEventListener("click", () => app.navigate("home"));
+
       form.appendChild(h2);
       form.appendChild(countSelect);
       form.appendChild(playersContainer);
       form.appendChild(btnStart);
+      form.appendChild(btnBack);
 
       buildPlayerRows(playersContainer);
 
