@@ -41,6 +41,8 @@ export function createGameScreen(app: App): ScreenRenderer {
   let nightPlayerShowing: PlayerId | null = null;
   let nightShowTransition = true;
   let autoActionKey = "";
+  let actionDoneThisPhase = false;
+  let prevJournalLength = 0;
 
   // ── helpers ───────────────────────────────────────────────────────
 
@@ -62,6 +64,87 @@ export function createGameScreen(app: App): ScreenRenderer {
     span.className = "action-info";
     span.textContent = text;
     container.appendChild(span);
+  }
+
+  function addDescription(container: HTMLElement, text: string): void {
+    const p = document.createElement("p");
+    p.className = "action-desc";
+    p.textContent = text;
+    container.appendChild(p);
+  }
+
+  function buildRecentJournalBlock(container: HTMLElement, state: GameState, since: number): void {
+    const newEntries = state.journal.slice(since);
+    if (newEntries.length === 0) return;
+
+    const block = document.createElement("div");
+    block.className = "journal-summary-block";
+
+    for (const entry of newEntries) {
+      const row = document.createElement("div");
+      row.className = "journal-summary-row";
+
+      const player = entry.playerId
+        ? state.players.find(p => p.id === entry.playerId)
+        : null;
+
+      const text = formatJournalEntry(entry, state);
+
+      if (player) {
+        const dot = document.createElement("span");
+        dot.className = "center-player-dot";
+        dot.style.backgroundColor = player.color;
+        dot.style.width = "8px";
+        dot.style.height = "8px";
+        dot.style.flexShrink = "0";
+        row.appendChild(dot);
+      }
+
+      const msg = document.createElement("span");
+      msg.textContent = text;
+      row.appendChild(msg);
+      block.appendChild(row);
+    }
+    container.appendChild(block);
+  }
+
+  function formatJournalEntry(entry: GameState["journal"][number], state: GameState): string {
+    const player = entry.playerId ? state.players.find(p => p.id === entry.playerId) : null;
+    const target = entry.targetId ? state.players.find(p => p.id === entry.targetId) : null;
+    const pName = player?.name ?? "";
+    const tName = target?.name ?? "";
+    const data = entry.data ?? {};
+
+    const templates: Record<string, string> = {
+      salary: `${pName} touche son salaire : +${data.amount}€`,
+      petitBoulot: `${pName} travaille : +${data.amount}€`,
+      marketBuy: `${pName} achète au Marché : -${data.amount}€`,
+      shower: `${pName} prend une douche : +1 PC`,
+      clinic: `${pName} se soigne : +1 PV (-${data.amount}€)`,
+      eventCard: `${pName} tire un Événement`,
+      scavengeCard: `${pName} fouille et trouve quelque chose`,
+      workedAtJob: `${pName} pointe au travail`,
+      hired: `${pName} est embauché`,
+      shelterEntry: `${pName} entre au Foyer (${data.turns} tour(s))`,
+      roundup: `${pName} → Rafle → Foyer`,
+      taxPaid: `${pName} paie une taxe : -${data.amount}€`,
+      taxFailed: `${pName} ne peut pas payer la taxe : -1 PC`,
+      nightCampPeaceful: `Nuit paisible. Coûts partagés, +1 PC.`,
+      nightTheft: `${pName} prend un objet de ${tName}`,
+      nightCaught: `${pName} pris sur le fait par ${tName} ! -1 PC`,
+      nightConfrontation: `Confrontation : ${pName} vs ${tName}`,
+      nightScavenge: `${pName} fouille la nuit`,
+      sleepsOutside: `${pName} dort dehors : -1 PV, -1 PC`,
+      sleepsInside: `${pName} dort à l'abri : -${data.amount}€`,
+      noFood: `${pName} ne mange pas : -1 PV`,
+      food: `${pName} mange : -${data.amount}€`,
+      fired: `${pName} est licencié !`,
+      eliminated: `💀 ${pName} est éliminé !`,
+      gameOver: `🏆 ${pName} a survécu !`,
+      movement: `${pName} se déplace`,
+    };
+
+    return templates[entry.message] ?? entry.message;
   }
 
   function pvIcons(pv: number): string {
@@ -391,6 +474,7 @@ export function createGameScreen(app: App): ScreenRenderer {
 
     switch (state.phase) {
       case GamePhase.MOVEMENT:
+        actionDoneThisPhase = false;
         buildMovementActions(state);
         break;
 
@@ -400,9 +484,11 @@ export function createGameScreen(app: App): ScreenRenderer {
 
       case GamePhase.NIGHT:
         if (app.allNightChoicesMade()) {
+          prevJournalLength = state.journal.length;
           addActionButton(area, "🌙 Résoudre la nuit", () => app.resolveNightPhase(), true);
+          addDescription(area, "Les actions secrètes de chacun vont être révélées.");
         } else {
-          addInfoText(area, "En attente des choix de nuit...");
+          addInfoText(area, "⏳ Choix de nuit en cours...");
         }
         break;
 
@@ -410,18 +496,36 @@ export function createGameScreen(app: App): ScreenRenderer {
         addActionButton(area, "🌙 Résolution", () => app.resolveNightPhase(), true);
         break;
 
-      case GamePhase.MAINTENANCE:
+      case GamePhase.MAINTENANCE: {
+        const title = document.createElement("div");
+        title.className = "center-case-header";
+        title.textContent = "🌙 Résultats de la nuit";
+        area.appendChild(title);
+
+        buildRecentJournalBlock(area, state, prevJournalLength);
+        prevJournalLength = state.journal.length;
+
         addActionButton(
           area,
-          `🔧 ${app.lang.ui.maintenance ?? "Résoudre la maintenance"}`,
+          `🔧 Résoudre la maintenance`,
           () => app.resolveMaintenancePhase(),
           true,
         );
+        addDescription(area, "Nourriture, logement, emploi — vérifier les seuils.");
         break;
+      }
 
-      case GamePhase.END_TURN:
+      case GamePhase.END_TURN: {
+        const title = document.createElement("div");
+        title.className = "center-case-header";
+        title.textContent = "🔧 Résultats maintenance";
+        area.appendChild(title);
+
+        buildRecentJournalBlock(area, state, prevJournalLength);
+
         addActionButton(area, "⏭️ Tour suivant", () => app.resolveEndTurnPhase(), true);
         break;
+      }
     }
   }
 
@@ -431,23 +535,48 @@ export function createGameScreen(app: App): ScreenRenderer {
 
     if (!app.hasTransportSelected()) {
       addInfoText(area, "Choisissez votre transport");
+
+      const player = getCurrentPlayer(state);
+      const hasCar = player.inventory.some(c => c.startsWith("obj_car"));
+      const canAffordCar = player.money >= 30;
+      const busDisabled = player.busDisabled;
+      const canAffordBus = player.money >= 10;
+
+      const makeTransportBtn = (
+        label: string,
+        desc: string,
+        mode: TransportMode,
+        enabled: boolean,
+      ) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "transport-option";
+        const btn = document.createElement("button");
+        btn.className = "action-btn";
+        btn.disabled = !enabled;
+        btn.textContent = label;
+        btn.addEventListener("click", () => app.chooseTransport(mode));
+        const sub = document.createElement("small");
+        sub.className = "transport-desc";
+        sub.textContent = desc;
+        wrapper.appendChild(btn);
+        wrapper.appendChild(sub);
+        return wrapper;
+      };
+
       const btnRow = document.createElement("div");
-      btnRow.className = "center-btn-row";
-      addActionButton(
-        btnRow,
-        `🚗 ${app.lang.transport.car.name}`,
-        () => app.chooseTransport(TransportMode.CAR),
-      );
-      addActionButton(
-        btnRow,
-        `🚌 ${app.lang.transport.bus.name}`,
-        () => app.chooseTransport(TransportMode.BUS),
-      );
-      addActionButton(
-        btnRow,
-        `🚶 ${app.lang.transport.foot.name}`,
-        () => app.chooseTransport(TransportMode.FOOT),
-      );
+      btnRow.className = "center-btn-row transport-row";
+      btnRow.appendChild(makeTransportBtn(
+        `🚗 Voiture`, `2d6 cases · 30€ · Avant seul.`,
+        TransportMode.CAR, hasCar && canAffordCar && !player.carDisabled,
+      ));
+      btnRow.appendChild(makeTransportBtn(
+        `🚌 Bus`, `1d6+2 cases · 10€ · Avant seul.`,
+        TransportMode.BUS, !busDisabled && canAffordBus,
+      ));
+      btnRow.appendChild(makeTransportBtn(
+        `🚶 À pied`, `1d6 cases · Gratuit · Avant ou arrière.`,
+        TransportMode.FOOT, true,
+      ));
       area.appendChild(btnRow);
       return;
     }
@@ -478,11 +607,22 @@ export function createGameScreen(app: App): ScreenRenderer {
     addInfoText(area, "👆 Cliquez une case dorée sur le plateau");
   }
 
+  function doActionThenSkip(actionType: string, params?: Record<string, unknown>): void {
+    app.caseAction(actionType, params);
+    actionDoneThisPhase = true;
+    setTimeout(() => app.skipAction(), 300);
+  }
+
   function buildCaseActions(state: GameState, player: PlayerState): void {
     const area = getActionArea();
     if (!area) return;
     const cell = BOARD[player.position];
     const cellName = getCellDisplayName(player.position, app.lang, app.theme);
+
+    if (actionDoneThisPhase) {
+      addInfoText(area, "✅ Action effectuée");
+      return;
+    }
 
     const headerText = document.createElement("div");
     headerText.className = "center-case-header";
@@ -496,74 +636,110 @@ export function createGameScreen(app: App): ScreenRenderer {
         info.className = "center-case-detail";
         if (building === "hotel") {
           info.textContent = `🏨 Hôtel — Nuit : ${cell.hotelCost ?? "?"}€`;
+          addDescription(area, `Vous dormirez ici ce soir. Coût déduit automatiquement.`);
         } else if (building === "house") {
           info.textContent = `🏠 Maison — Nuit : ${cell.nightCost ?? "?"}€`;
+          addDescription(area, `Vous dormirez ici ce soir. Coût déduit automatiquement.`);
         } else {
           info.textContent = `❌ Pas d'abri — Dormir dehors (-1 PV, -1 PC)`;
           info.style.color = "var(--accent)";
+          addDescription(area, `Aucun bâtiment ici. Vous perdrez 1 PV et 1 PC cette nuit.`);
         }
-        area.appendChild(info);
+        area.insertBefore(info, area.querySelector(".action-desc"));
         break;
       }
 
-      case CellType.PETIT_BOULOT:
+      case CellType.PETIT_BOULOT: {
         addActionButton(area, "💼 Travailler (+80€)", () =>
-          app.caseAction("petitBoulot"), true,
+          doActionThenSkip("petitBoulot"), true,
         );
+        addDescription(area, "Gagner 80€ immédiatement. Un seul travailleur par tour.");
         break;
+      }
 
       case CellType.MARKET: {
         const marketCells = BOARD.filter(c => c.type === CellType.MARKET);
         const marketIndex = marketCells.findIndex(c => c.index === player.position);
+        addDescription(area, `Acheter des objets. Chaque objet augmente vos PC (crédibilité). Solde : ${player.money}€`);
         if (marketIndex >= 0 && state.marketCards[marketIndex]) {
           const slots = state.marketCards[marketIndex];
-          const btnRow = document.createElement("div");
-          btnRow.className = "center-btn-row";
           for (let si = 0; si < slots.length; si++) {
             const cardId = slots[si];
             if (!cardId) continue;
             const def = getCardDef(cardId);
             const name = getCardName(cardId, app.lang);
             const slotIndex = si;
-            addActionButton(
-              btnRow,
-              `🛒 ${name} (${def?.price ?? "?"}€)`,
-              () => app.caseAction("marketBuy", { marketIndex, slotIndex }),
+            const canBuy = player.money >= (def?.price ?? Infinity);
+            const btn = document.createElement("button");
+            btn.className = canBuy ? "action-btn" : "action-btn";
+            btn.disabled = !canBuy;
+            btn.textContent = `🛒 ${name} (+${def?.pcValue ?? "?"}PC) — ${def?.price ?? "?"}€`;
+            btn.addEventListener("click", () =>
+              app.caseAction("marketBuy", { marketIndex, slotIndex }),
             );
+            area.appendChild(btn);
           }
-          area.appendChild(btnRow);
         }
         break;
       }
 
       case CellType.SHOWER:
-        addActionButton(area, "🚿 Se doucher (+1 PC)", () =>
-          app.caseAction("shower"), true,
-        );
+        if (player.pc >= 10) {
+          addInfoText(area, "PC au maximum (10). Rien à faire.");
+        } else {
+          addActionButton(area, "🚿 Se doucher (+1 PC)", () =>
+            doActionThenSkip("shower"), true,
+          );
+          addDescription(area, "Gratuit. +1 point de crédibilité.");
+        }
         break;
 
       case CellType.CLINIC:
-        addActionButton(area, "🏥 Se soigner (+1 PV, -50€)", () =>
-          app.caseAction("clinic"), true,
-        );
+        if (player.pv >= 5) {
+          addInfoText(area, "PV au maximum (5). Rien à faire.");
+        } else if (player.money < 50) {
+          addInfoText(area, `🏥 Soins disponibles mais pas assez d'argent (50€ requis, vous avez ${player.money}€).`);
+        } else {
+          addActionButton(area, "🏥 Se soigner (+1 PV, -50€)", () =>
+            doActionThenSkip("clinic"), true,
+          );
+          addDescription(area, `Coûte 50€. Vous avez ${player.money}€. Santé actuelle : ${player.pv}/5 PV.`);
+        }
         break;
 
       case CellType.WORKPLACE:
         if (player.job) {
           addActionButton(area, "🏢 Pointer au travail", () =>
-            app.caseAction("workplace"), true,
+            doActionThenSkip("workplace"), true,
           );
+          addDescription(area, "Valide votre cycle de travail. Prochain passage à la Paie → salaire versé.");
         } else {
-          const btnRow = document.createElement("div");
-          btnRow.className = "center-btn-row";
+          addDescription(area, `Vous êtes sans emploi. PC : ${player.pc}/10. Postulez si votre PC est suffisant.`);
           for (const jobType of state.availableJobs) {
             const name = getJobName(jobType, app.lang);
-            addActionButton(btnRow, `📋 Postuler: ${name}`, () =>
-              app.caseAction("hire", { jobType }),
-            );
+            const stats: Record<string, { hire: number; sal: number }> = {
+              cadre: { hire: 8, sal: 500 },
+              employe: { hire: 5, sal: 350 },
+              precaire: { hire: 2, sal: 200 },
+            };
+            const s = stats[jobType];
+            const canHire = s ? player.pc >= s.hire : false;
+            const btn = document.createElement("button");
+            btn.className = "action-btn";
+            btn.disabled = !canHire;
+            btn.textContent = `📋 ${name} (${s?.sal}€/cycle, min ${s?.hire} PC)`;
+            btn.addEventListener("click", () => doActionThenSkip("hire", { jobType }));
+            area.appendChild(btn);
           }
-          area.appendChild(btnRow);
         }
+        break;
+
+      case CellType.SHELTER:
+        addDescription(area, "Logement et repas gratuits. Impossible de travailler pendant le séjour.");
+        break;
+
+      case CellType.PAYDAY:
+        addDescription(area, "Le salaire est versé au passage, si vous avez pointé au travail depuis le dernier salaire.");
         break;
 
       default:
