@@ -2,7 +2,7 @@ import type { App, ScreenRenderer } from "../app";
 import type { GameState } from "../../engine/types";
 import { GamePhase } from "../../engine/types";
 import { getCardDef } from "../../engine/cards";
-import { getCardName } from "../../locale/i18n";
+import { getCardName, getCardDescription } from "../../locale/i18n";
 import { getCurrentPlayer, computePC } from "../../engine/state";
 
 const DRAFT_PC_TARGET = 8;
@@ -154,11 +154,17 @@ export function createDraftScreen(app: App): ScreenRenderer {
 
       const pcEl = document.createElement("div");
       pcEl.className = "card-pc";
-      pcEl.textContent = `${cardPc} PC${def.price != null ? ` · ${def.price}€` : ""}`;
+      pcEl.textContent = `${cardPc} PC · ${def.price ?? "?"}€`;
+
+      const descEl = document.createElement("div");
+      descEl.className = "card-loss";
+      const desc = getCardDescription(cardId, app.lang);
+      descEl.textContent = desc || "";
 
       cardEl.appendChild(icon);
       cardEl.appendChild(name);
       cardEl.appendChild(pcEl);
+      if (desc) cardEl.appendChild(descEl);
 
       if (!wouldExceed) {
         cardEl.addEventListener("click", () => {
@@ -194,19 +200,26 @@ export function createDraftScreen(app: App): ScreenRenderer {
     selectedList.style.flexWrap = "wrap";
     selectedList.style.gap = "8px";
     selectedList.style.marginTop = "8px";
-    for (const cardId of player.inventory) {
+    const nonCarItems = player.inventory.filter(c => !c.startsWith("obj_car"));
+    if (nonCarItems.length === 0) {
+      const empty = document.createElement("span");
+      empty.style.color = "var(--text-muted)";
+      empty.style.fontSize = "var(--font-size-sm)";
+      empty.textContent = "Aucun objet sélectionné";
+      selectedList.appendChild(empty);
+    }
+    for (const cardId of nonCarItems) {
       const def = getCardDef(cardId);
-      const span = document.createElement("span");
-      span.textContent = def?.icon ?? "?";
-      span.title = getCardName(cardId, app.lang);
-      span.style.fontSize = "1.5rem";
-      selectedList.appendChild(span);
+      const chip = document.createElement("span");
+      chip.className = "inventory-chip";
+      chip.textContent = `${def?.icon ?? "?"} ${getCardName(cardId, app.lang)} (${def?.pcValue ?? 0})`;
+      selectedList.appendChild(chip);
     }
     playerProfile.appendChild(selectedList);
 
     const pcCounterEl = document.createElement("div");
     pcCounterEl.className = "pc-counter";
-    pcCounterEl.style.marginTop = "8px";
+    pcCounterEl.style.marginTop = "12px";
     pcCounterEl.style.fontSize = "var(--font-size-lg)";
     pcCounterEl.style.fontWeight = "600";
     pcCounterEl.textContent = `${chosenPC} / ${PLAYER_CHOICE_TARGET} PC`;
@@ -226,12 +239,27 @@ export function createDraftScreen(app: App): ScreenRenderer {
     pcBar.appendChild(pcFill);
     playerProfile.appendChild(pcBar);
 
-    const carCheck = document.createElement("div");
-    carCheck.style.marginTop = "8px";
-    carCheck.style.fontSize = "var(--font-size-xs)";
-    carCheck.style.color = "var(--text-muted)";
-    carCheck.textContent = `🚗 Voiture incluse (3 PC). Choisissez 5 PC d'objets.`;
-    playerProfile.appendChild(carCheck);
+    const totalPcInfo = document.createElement("div");
+    totalPcInfo.style.marginTop = "8px";
+    totalPcInfo.style.fontSize = "var(--font-size-xs)";
+    totalPcInfo.style.color = "var(--text-muted)";
+    totalPcInfo.textContent = `🚗 Voiture offerte. PC total au départ : ${pcTotal}/10.`;
+    playerProfile.appendChild(totalPcInfo);
+
+    const strategyHint = document.createElement("div");
+    strategyHint.style.marginTop = "6px";
+    strategyHint.style.fontSize = "var(--font-size-xs)";
+    strategyHint.style.color = "var(--text-secondary)";
+    strategyHint.style.lineHeight = "1.4";
+    const pcLevel = pcTotal;
+    if (pcLevel >= 8) {
+      strategyHint.textContent = `📊 PC ≥ 8 → éligible Cadre (500€/cycle) + bonus salaire. Fragile si perte d'objet.`;
+    } else if (pcLevel >= 5) {
+      strategyHint.textContent = `📊 PC ≥ 5 → éligible Employé (350€/cycle). Marge avant licenciement : ${pcLevel - 3} PC.`;
+    } else {
+      strategyHint.textContent = `📊 PC < 5 → Précaire uniquement (200€/cycle). Situation très fragile.`;
+    }
+    playerProfile.appendChild(strategyHint);
 
     const header = root.querySelector(".draft-header");
     if (header) {

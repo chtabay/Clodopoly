@@ -1098,6 +1098,13 @@ body {
   color: var(--text-secondary);
 }
 
+.draft-card .card-loss {
+  font-size: 0.65rem;
+  color: var(--accent);
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
 .draft-bar {
   position: sticky;
   bottom: 0;
