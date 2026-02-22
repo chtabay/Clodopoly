@@ -47,6 +47,11 @@ import {
   GUARANTEED_LODGING_COST,
   SELL_PRICE_RATIO,
   ACTIONS_PER_PLAYER_PER_DAY,
+  TEMP_JOB_MIN_PAY,
+  TEMP_JOB_MAX_PAY,
+  TEMP_JOB_MAX_DURATION,
+  TEMP_JOB_SPAWN_CHANCE,
+  TEMP_JOB_MAX_ACTIVE,
 } from "./constants";
 
 // ==================== CASE ACTIONS ====================
@@ -464,6 +469,29 @@ export function resolveGuaranteedLodging(state: GameState, playerId: PlayerId): 
   });
 }
 
+export function resolveTempJob(state: GameState, playerId: PlayerId, offerId: string): GameState {
+  const offers = state.tempJobOffers ?? [];
+  const offer = offers.find(o => o.id === offerId);
+  if (!offer) return state;
+
+  const player = state.players.find(p => p.id === playerId)!;
+  if (player.position !== offer.cellIndex) return state;
+
+  let s = updatePlayerInState(state, playerId, p => ({
+    ...p,
+    money: clampMoney(p.money + offer.pay),
+  }));
+
+  s = { ...s, tempJobOffers: offers.filter(o => o.id !== offerId) };
+
+  return addJournalEntry(s, {
+    type: JournalEntryType.CASE_ACTION,
+    playerId,
+    message: "tempJob",
+    data: { establishment: offer.establishmentName, amount: offer.pay },
+  });
+}
+
 // ==================== NIGHT RESOLUTION ====================
 
 export function resolveNight(state: GameState, dice: DiceRoller): GameState {
@@ -808,6 +836,38 @@ export function resolveEndTurn(state: GameState): GameState {
     phase: GamePhase.MOVEMENT,
   };
   return s;
+}
+
+export function spawnAndExpireTempJobs(
+  state: GameState,
+  workCells: { cellIndex: CellIndex; name: string }[],
+  dice: DiceRoller,
+): GameState {
+  let offers = [...(state.tempJobOffers ?? [])];
+
+  offers = offers
+    .map(o => ({ ...o, turnsRemaining: o.turnsRemaining - 1 }))
+    .filter(o => o.turnsRemaining > 0);
+
+  if (offers.length < TEMP_JOB_MAX_ACTIVE && workCells.length > 0) {
+    for (const wc of workCells) {
+      if (offers.length >= TEMP_JOB_MAX_ACTIVE) break;
+      if (offers.some(o => o.cellIndex === wc.cellIndex)) continue;
+      const roll = dice.rollOne();
+      if (roll / 6 > TEMP_JOB_SPAWN_CHANCE) continue;
+      const pay = TEMP_JOB_MIN_PAY + Math.floor((dice.rollOne() / 6) * (TEMP_JOB_MAX_PAY - TEMP_JOB_MIN_PAY));
+      const duration = 1 + Math.floor((dice.rollOne() / 6) * TEMP_JOB_MAX_DURATION);
+      offers.push({
+        id: `tj_${wc.cellIndex}_${state.turn}`,
+        cellIndex: wc.cellIndex,
+        establishmentName: wc.name,
+        pay,
+        turnsRemaining: duration,
+      });
+    }
+  }
+
+  return { ...state, tempJobOffers: offers };
 }
 
 // ==================== NEXT PLAYER ====================

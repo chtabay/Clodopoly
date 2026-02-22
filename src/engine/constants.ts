@@ -20,6 +20,11 @@ export const BUS_TICKET_COST = 10;
 export const CAR_FUEL_DEBT_LIMIT = 2;
 
 export const PETIT_BOULOT_PAY = 80;
+export const TEMP_JOB_MIN_PAY = 40;
+export const TEMP_JOB_MAX_PAY = 120;
+export const TEMP_JOB_MAX_DURATION = 4;
+export const TEMP_JOB_SPAWN_CHANCE = 0.3;
+export const TEMP_JOB_MAX_ACTIVE = 3;
 export const CLINIC_COST = 50;
 export const SHELTER_EXIT_COST = 50;
 export const GUARANTEED_LODGING_COST = 80;

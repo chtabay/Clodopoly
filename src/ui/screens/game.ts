@@ -12,6 +12,7 @@ import { getCellDisplayName, getCardName, getCardDescription, getJobName, getEst
 import { getCardDef } from "../../engine/cards";
 import { getCurrentPlayer } from "../../engine/state";
 import { createBoard } from "../components/board";
+import { showRulesModal } from "../components/rules-modal";
 
 
 const MAX_PV = 5;
@@ -74,9 +75,13 @@ export function createGameScreen(app: App): ScreenRenderer {
     const block = document.createElement("div");
     block.className = "journal-summary-block";
 
+    const goodMessages = new Set(["salary", "petitBoulot", "shower", "clinic", "hired", "nightCampPeaceful", "sleepsInside", "sleepsGuaranteedLodging", "tempJob"]);
+    const badMessages = new Set(["sleepsOutside", "noFood", "fired", "eliminated", "taxPaid", "taxFailed", "nightCaught", "nightTheft", "roundup"]);
+
     for (const entry of newEntries) {
       const row = document.createElement("div");
-      row.className = "journal-summary-row";
+      const entryClass = goodMessages.has(entry.message) ? "journal-good" : badMessages.has(entry.message) ? "journal-bad" : "";
+      row.className = `journal-summary-row ${entryClass}`;
 
       const player = entry.playerId
         ? state.players.find(p => p.id === entry.playerId)
@@ -137,6 +142,7 @@ export function createGameScreen(app: App): ScreenRenderer {
       gameOver: `🏆 ${pName} a survécu !`,
       movement: `${pName} se déplace`,
       sell: `${pName} vend un objet : +${data.amount}€`,
+      tempJob: `${pName} travaille à ${data.establishment} : +${data.amount}€`,
       guaranteedLodging: `${pName} loue un logement garanti : -${data.amount}€`,
       sleepsGuaranteedLodging: `${pName} dort dans son logement loué`,
     };
@@ -259,7 +265,13 @@ export function createGameScreen(app: App): ScreenRenderer {
     foodSpan.title = "Coût de la nourriture par nuit";
     foodSpan.textContent = `🍽️ ${state.foodCost}€/nuit`;
 
-    rightGroup.append(foodSpan);
+    const rulesBtn = document.createElement("button");
+    rulesBtn.className = "top-bar-rules-btn";
+    rulesBtn.textContent = "?";
+    rulesBtn.title = "Regles du jeu";
+    rulesBtn.addEventListener("click", () => showRulesModal());
+
+    rightGroup.append(foodSpan, rulesBtn);
 
     topBar.append(leftGroup, centerGroup, rightGroup);
   }
@@ -607,15 +619,15 @@ export function createGameScreen(app: App): ScreenRenderer {
       const btnRow = document.createElement("div");
       btnRow.className = "center-btn-row transport-row";
       btnRow.appendChild(makeTransportBtn(
-        `🚗 Voiture`, `2d6 cases · 30€ · Avant seul.`,
+        `🚗 Voiture`, `Avancez de 2 à 12 cases (30€ d'essence)`,
         TransportMode.CAR, hasCar && canAffordCar && !player.carDisabled,
       ));
       btnRow.appendChild(makeTransportBtn(
-        `🚌 Bus`, `1d6+2 cases · 10€ · Avant seul.`,
+        `🚌 Bus`, `Avancez de 3 à 8 cases (10€)`,
         TransportMode.BUS, !busDisabled && canAffordBus,
       ));
       btnRow.appendChild(makeTransportBtn(
-        `🚶 À pied`, `1d6 cases · Gratuit · Avant ou arrière.`,
+        `🚶 À pied`, `1 à 6 cases, gratuit, reculer possible`,
         TransportMode.FOOT, true,
       ));
       area.appendChild(btnRow);
@@ -646,6 +658,36 @@ export function createGameScreen(app: App): ScreenRenderer {
       area.appendChild(diceDisplay);
     }
     addInfoText(area, "👆 Cliquez une case dorée sur le plateau");
+  }
+
+  function getPcImpactWarning(player: PlayerState, pcDelta: number): string | null {
+    const newPc = Math.max(0, Math.min(10, player.pc + pcDelta));
+    if (!player.job) return null;
+    const keepThresholds: Record<string, number> = { cadre: 6, employe: 3, precaire: 1 };
+    const threshold = keepThresholds[player.job] ?? 0;
+    if (player.pc >= threshold && newPc < threshold) {
+      const jobName = getJobName(player.job, app.lang);
+      return `PC ${player.pc} → ${newPc}. Sous le seuil de ${threshold} PC : vous perdrez votre emploi de ${jobName} !`;
+    }
+    return null;
+  }
+
+  function addSellButton(area: HTMLElement, player: PlayerState, cardId: string): void {
+    const def = getCardDef(cardId)!;
+    const sellPrice = Math.floor(def.price! * 0.5);
+    const pcLost = -(def.pcValue ?? 0);
+    const warning = getPcImpactWarning(player, pcLost);
+    const btn = document.createElement("button");
+    btn.className = "action-btn";
+    btn.textContent = `💰 Vendre ${getCardName(cardId, app.lang)} → ${sellPrice}€ (${pcLost} PC)`;
+    btn.addEventListener("click", () => doActionThenSkip("sell", { cardId }));
+    area.appendChild(btn);
+    if (warning) {
+      const warn = document.createElement("p");
+      warn.className = "action-warning";
+      warn.textContent = `⚠️ ${warning}`;
+      area.appendChild(warn);
+    }
   }
 
   function doActionThenSkip(actionType: string, params?: Record<string, unknown>): void {
@@ -720,6 +762,19 @@ export function createGameScreen(app: App): ScreenRenderer {
           addDescription(area, `Aucun bâtiment ici. Vous perdrez 1 PV et 1 PC cette nuit.`);
         }
         area.insertBefore(info, area.children[1] ?? null);
+
+        if (establishment?.services.includes("work")) {
+          const offers = (state.tempJobOffers ?? []).filter(o => o.cellIndex === player.position);
+          if (offers.length > 0) {
+            for (const offer of offers) {
+              addActionButton(area, `💼 ${offer.establishmentName} — ${offer.pay}€ (${offer.turnsRemaining} tour(s))`, () =>
+                doActionThenSkip("tempJob", { offerId: offer.id }), true,
+              );
+            }
+          } else {
+            addDescription(area, `${establishment.name} — Pas d'offre de travail disponible actuellement.`);
+          }
+        }
         break;
       }
 
@@ -732,13 +787,7 @@ export function createGameScreen(app: App): ScreenRenderer {
         if (estabPb?.services.includes("sell") && player.inventory.length > 0) {
           const sellables = player.inventory.filter(cid => getCardDef(cid)?.price);
           for (const cardId of sellables) {
-            const def = getCardDef(cardId)!;
-            const sellPrice = Math.floor(def.price! * 0.5);
-            const btn = document.createElement("button");
-            btn.className = "action-btn";
-            btn.textContent = `💰 Vendre ${getCardName(cardId, app.lang)} → ${sellPrice}€`;
-            btn.addEventListener("click", () => doActionThenSkip("sell", { cardId }));
-            area.appendChild(btn);
+            addSellButton(area, player, cardId);
           }
           addDescription(area, "Revente à 50 % du prix d'achat.");
         }
@@ -756,29 +805,31 @@ export function createGameScreen(app: App): ScreenRenderer {
             if (!cardId) continue;
             const def = getCardDef(cardId);
             const name = getCardName(cardId, app.lang);
+            const desc = getCardDescription(cardId, app.lang);
             const slotIndex = si;
             const canBuy = player.money >= (def?.price ?? Infinity);
+            const newPc = player.pc + (def?.pcValue ?? 0);
             const btn = document.createElement("button");
-            btn.className = canBuy ? "action-btn" : "action-btn";
+            btn.className = "action-btn";
             btn.disabled = !canBuy;
             btn.textContent = `🛒 ${name} (+${def?.pcValue ?? "?"}PC) — ${def?.price ?? "?"}€`;
             btn.addEventListener("click", () =>
               app.caseAction("marketBuy", { marketIndex, slotIndex }),
             );
             area.appendChild(btn);
+            if (desc) {
+              const lossInfo = document.createElement("small");
+              lossInfo.className = "action-sub-detail";
+              lossInfo.textContent = `${desc} · PC après : ${Math.min(10, newPc)}/10 · Solde après : ${player.money - (def?.price ?? 0)}€`;
+              area.appendChild(lossInfo);
+            }
           }
         }
         const estab = getEstablishment(player.position, app.theme);
         if (estab?.services.includes("sell") && player.inventory.length > 0) {
           const sellables = player.inventory.filter(cid => getCardDef(cid)?.price);
           for (const cardId of sellables) {
-            const def = getCardDef(cardId)!;
-            const sellPrice = Math.floor(def.price! * 0.5);
-            const btn = document.createElement("button");
-            btn.className = "action-btn";
-            btn.textContent = `💰 Vendre ${getCardName(cardId, app.lang)} → ${sellPrice}€`;
-            btn.addEventListener("click", () => doActionThenSkip("sell", { cardId }));
-            area.appendChild(btn);
+            addSellButton(area, player, cardId);
           }
           addDescription(area, "Revente à 50 % du prix d'achat.");
         }
@@ -809,22 +860,30 @@ export function createGameScreen(app: App): ScreenRenderer {
         }
         break;
 
-      case CellType.WORKPLACE:
+      case CellType.WORKPLACE: {
+        const jobStats: Record<string, { hire: number; keep: number; sal: number; bonus: number; late: number }> = {
+          cadre:    { hire: 8, keep: 6, sal: 500, bonus: 550, late: 0 },
+          employe:  { hire: 5, keep: 3, sal: 350, bonus: 385, late: 1 },
+          precaire: { hire: 2, keep: 1, sal: 200, bonus: 220, late: 3 },
+        };
         if (player.job) {
+          const js = jobStats[player.job];
           addActionButton(area, "🏢 Pointer au travail", () =>
             doActionThenSkip("workplace"), true,
           );
-          addDescription(area, "Valide votre cycle de travail. Prochain passage à la Paie → salaire versé.");
+          const salary = player.pc >= 8 ? (js?.bonus ?? js?.sal) : js?.sal;
+          addDescription(area, `Salaire : ${salary}€/cycle${player.pc >= 8 ? " (bonus PC≥8)" : ""}. Retards : ${player.lateCounter}/${js?.late ?? "?"} max.`);
+          if (js && player.pc < js.keep + 2) {
+            const warn = document.createElement("p");
+            warn.className = "action-warning";
+            warn.textContent = `⚠️ Seuil PC de maintien : ${js.keep}. Votre PC : ${player.pc}. Attention !`;
+            area.appendChild(warn);
+          }
         } else {
           addDescription(area, `Vous êtes sans emploi. PC : ${player.pc}/10. Postulez si votre PC est suffisant.`);
           for (const jobType of state.availableJobs) {
             const name = getJobName(jobType, app.lang);
-            const stats: Record<string, { hire: number; sal: number }> = {
-              cadre: { hire: 8, sal: 500 },
-              employe: { hire: 5, sal: 350 },
-              precaire: { hire: 2, sal: 200 },
-            };
-            const s = stats[jobType];
+            const s = jobStats[jobType];
             const canHire = s ? player.pc >= s.hire : false;
             const btn = document.createElement("button");
             btn.className = "action-btn";
@@ -832,9 +891,16 @@ export function createGameScreen(app: App): ScreenRenderer {
             btn.textContent = `📋 ${name} (${s?.sal}€/cycle, min ${s?.hire} PC)`;
             btn.addEventListener("click", () => doActionThenSkip("hire", { jobType }));
             area.appendChild(btn);
+            if (s) {
+              const detail = document.createElement("small");
+              detail.className = "action-sub-detail";
+              detail.textContent = `Maintien : ${s.keep} PC min · Retards tolérés : ${s.late} · Bonus si PC≥8 : ${s.bonus}€`;
+              area.appendChild(detail);
+            }
           }
         }
         break;
+      }
 
       case CellType.SHELTER:
         addDescription(area, "Logement et repas gratuits. Impossible de travailler pendant le séjour.");
@@ -1081,37 +1147,113 @@ export function createGameScreen(app: App): ScreenRenderer {
     title.textContent = `${player.name} — ${app.lang.ui.nightChoice ?? "Votre choix"}`;
     nightOverlay.appendChild(title);
 
+    const cell = BOARD[player.position];
+    const cellName = getCellDisplayName(player.position, app.lang, app.theme);
+    const building = state.buildings.get(player.position);
+    const hasGuaranteed = state.guaranteedLodgingForNight?.has(player.id);
+
+    const situationBox = document.createElement("div");
+    situationBox.className = "night-situation";
+
+    const posLine = document.createElement("div");
+    posLine.className = "night-situation-line";
+    posLine.textContent = `📍 ${cellName}`;
+    situationBox.appendChild(posLine);
+
+    if (hasGuaranteed) {
+      const lodgingLine = document.createElement("div");
+      lodgingLine.className = "night-situation-line good";
+      lodgingLine.textContent = "🏠 Logement garanti réservé — vous dormirez à l'abri.";
+      situationBox.appendChild(lodgingLine);
+    } else if (cell.type === CellType.PROPERTY && building) {
+      const cost = building === "hotel" ? (cell.hotelCost ?? 0) : (cell.nightCost ?? 0);
+      const lodgingLine = document.createElement("div");
+      lodgingLine.className = "night-situation-line good";
+      lodgingLine.textContent = `${building === "hotel" ? "🏨" : "🏠"} Abri disponible — Nuit : ${cost}€`;
+      situationBox.appendChild(lodgingLine);
+    } else if (player.position === 10) {
+      const lodgingLine = document.createElement("div");
+      lodgingLine.className = "night-situation-line good";
+      lodgingLine.textContent = "🏠 Foyer d'urgence — logement gratuit.";
+      situationBox.appendChild(lodgingLine);
+    } else {
+      const lodgingLine = document.createElement("div");
+      lodgingLine.className = "night-situation-line bad";
+      lodgingLine.textContent = "❌ Pas d'abri — dormir dehors : -1 PV, -1 PC";
+      situationBox.appendChild(lodgingLine);
+    }
+
     const camps = app.getActiveCamps();
+    let isInCamp = false;
+    let campMates: string[] = [];
     for (const [, playerIds] of camps) {
       if (!playerIds.includes(player.id)) continue;
-      const mates = playerIds
+      isInCamp = true;
+      campMates = playerIds
         .filter(id => id !== player.id)
         .map(id => state.players.find(p => p.id === id)?.name ?? id);
-      if (mates.length > 0) {
-        const campInfo = document.createElement("p");
-        campInfo.className = "camp-info";
-        campInfo.textContent =
-          `${app.lang.ui.campWith ?? "Vous êtes en Camp avec"} ${mates.join(", ")}`;
-        nightOverlay.appendChild(campInfo);
-      }
       break;
     }
+
+    if (isInCamp && campMates.length > 0) {
+      const campLine = document.createElement("div");
+      campLine.className = "night-situation-line";
+      campLine.textContent = `👥 Camp avec : ${campMates.join(", ")}`;
+      situationBox.appendChild(campLine);
+    } else {
+      const aloneLine = document.createElement("div");
+      aloneLine.className = "night-situation-line";
+      aloneLine.textContent = "🚶 Seul(e) cette nuit.";
+      situationBox.appendChild(aloneLine);
+    }
+
+    nightOverlay.appendChild(situationBox);
 
     const grid = document.createElement("div");
     grid.className = "night-actions-grid";
 
+    const nightDescriptions: Record<string, string> = {
+      [NightAction.SLEEP]: isInCamp
+        ? "+1 PC (camp). Coûts de nourriture partagés. Vulnérable au vol."
+        : "Repos simple. Vulnérable si d'autres arrivent.",
+      [NightAction.WATCH]: isInCamp
+        ? "Protège le camp. Les voleurs seront pris sur le fait (-1 PC pour eux). Pas de bonus PC."
+        : "Inutile si vous êtes seul(e).",
+      [NightAction.SCAVENGE]: "Piochez une carte Fouille. Vous quittez le camp (pas de +1 PC).",
+      [NightAction.TAKE]: isInCamp
+        ? "Tentez de voler un objet d'un dormeur. Si un veilleur est présent → -1 PC. Si 2 voleurs → confrontation (dé + objets, perdant : -1 PV)."
+        : "Personne à voler si vous êtes seul(e).",
+    };
+
+    const nightStyles: Record<string, string> = {
+      [NightAction.SLEEP]: "defensive",
+      [NightAction.WATCH]: "defensive",
+      [NightAction.SCAVENGE]: "neutral",
+      [NightAction.TAKE]: "offensive",
+    };
+
     for (const action of NIGHT_ACTIONS_ORDER) {
       const info = app.lang.nightActions[action];
       const btn = document.createElement("button");
-      btn.className = "action-btn night-action-btn";
+      btn.className = `action-btn night-action-btn night-${nightStyles[action] ?? "neutral"}`;
 
+      const iconMap: Record<string, string> = {
+        [NightAction.SLEEP]: "😴",
+        [NightAction.WATCH]: "👁️",
+        [NightAction.SCAVENGE]: "🔦",
+        [NightAction.TAKE]: "🤚",
+      };
+      const iconEl = document.createElement("span");
+      iconEl.className = "night-action-icon";
+      iconEl.textContent = iconMap[action] ?? "";
       const nameEl = document.createElement("strong");
       nameEl.textContent = info.name;
       const descEl = document.createElement("small");
-      descEl.textContent = info.description;
+      descEl.className = "night-action-detail";
+      descEl.textContent = nightDescriptions[action] ?? info.description;
 
+      btn.appendChild(iconEl);
       btn.appendChild(nameEl);
-      btn.appendChild(document.createElement("br"));
       btn.appendChild(descEl);
 
       btn.addEventListener("click", () => {

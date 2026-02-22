@@ -25,7 +25,7 @@ export function createEndgameScreen(app: App): ScreenRenderer {
       const table = document.createElement("table");
       table.className = "ranking-table";
       const thead = document.createElement("thead");
-      thead.innerHTML = "<tr><th>#</th><th>Joueur</th><th>Statut</th></tr>";
+      thead.innerHTML = "<tr><th>#</th><th>Joueur</th><th>Statut</th><th>Final</th></tr>";
       rankingBody = document.createElement("tbody");
       table.appendChild(thead);
       table.appendChild(rankingBody);
@@ -117,8 +117,47 @@ export function createEndgameScreen(app: App): ScreenRenderer {
         tr.innerHTML = `<td>${rank}</td>`;
         tr.appendChild(nameCell);
         tr.appendChild(document.createElement("td")).textContent = statusText;
+
+        const statsCell = document.createElement("td");
+        statsCell.className = "endgame-stats-cell";
+        statsCell.textContent = `${player.money}€ · ${player.pv} PV · ${player.pc} PC`;
+        tr.appendChild(statsCell);
+
         tableBody.appendChild(tr);
       });
+
+      const statsSection = document.createElement("div");
+      statsSection.className = "endgame-stats-section";
+      const statsTitle = document.createElement("h4");
+      statsTitle.textContent = "Statistiques";
+      statsSection.appendChild(statsTitle);
+
+      for (const player of fullRanking) {
+        const nightsOutside = state.journal.filter(e => e.playerId === player.id && e.message === "sleepsOutside").length;
+        const nightsInside = state.journal.filter(e => e.playerId === player.id && (e.message === "sleepsInside" || e.message === "sleepsGuaranteedLodging")).length;
+        const itemsLost = state.journal.filter(e => e.playerId === player.id && e.message === "nightTheft" && e.targetId === player.id).length;
+        const timesWorked = state.journal.filter(e => e.playerId === player.id && (e.message === "petitBoulot" || e.message === "workedAtJob" || e.message === "tempJob")).length;
+        const elimTurn = state.journal.find(e => e.playerId === player.id && e.message === "eliminated")?.turn;
+
+        const row = document.createElement("div");
+        row.className = "endgame-stat-row";
+        const dot = document.createElement("span");
+        dot.style.display = "inline-block";
+        dot.style.width = "8px";
+        dot.style.height = "8px";
+        dot.style.borderRadius = "50%";
+        dot.style.backgroundColor = player.color;
+        row.appendChild(dot);
+        const txt = document.createElement("span");
+        txt.textContent = ` ${player.name} : ${nightsOutside} nuit(s) dehors · ${nightsInside} nuit(s) a l'abri · ${timesWorked} travail(s) · ${itemsLost} vol(s) subi(s)${elimTurn ? ` · elimine tour ${elimTurn}` : ` · ${state.turn} tours survecu(s)`}`;
+        row.appendChild(txt);
+        statsSection.appendChild(row);
+      }
+
+      const endgame = rankingBody.closest(".endgame");
+      const existingStats = endgame?.querySelector(".endgame-stats-section");
+      if (existingStats) existingStats.remove();
+      endgame?.insertBefore(statsSection, endgame.querySelector("div[style]"));
     },
 
     unmount(): void {

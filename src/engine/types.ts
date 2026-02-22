@@ -149,6 +149,16 @@ export interface GameState {
   guaranteedLodgingForNight?: Set<PlayerId>;
   /** Manche en cours dans la journée (0 = première, 1 = deuxième, etc.) */
   roundsInDay?: number;
+  /** Offres de travail temporaires dans les établissements */
+  tempJobOffers?: TempJobOffer[];
+}
+
+export interface TempJobOffer {
+  id: string;
+  cellIndex: CellIndex;
+  establishmentName: string;
+  pay: number;
+  turnsRemaining: number;
 }
 
 export enum JournalEntryType {

@@ -170,6 +170,7 @@ export const LANG_FR: LangData = {
     shelterExit:        "{player} sort du Foyer",
     roundup:            "{player} est envoyé au Foyer (Rafle)",
     sell:               "{player} vend un objet : +{amount}€",
+    tempJob:            "{player} travaille à {establishment} : +{amount}€",
     guaranteedLodging:   "{player} loue un logement garanti : -{amount}€",
     sleepsGuaranteedLodging: "{player} dort dans son logement loué",
   },

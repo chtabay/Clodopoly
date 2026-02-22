@@ -1,5 +1,6 @@
 import type { App } from "../app";
 import type { ScreenRenderer } from "../app";
+import { showRulesModal } from "../components/rules-modal";
 
 const VERSION = "v0.1.0";
 
@@ -28,9 +29,7 @@ export function createHomeScreen(app: App): ScreenRenderer {
       const btnRules = document.createElement("button");
       btnRules.className = "action-btn";
       btnRules.textContent = "Règles";
-      btnRules.addEventListener("click", () => {
-        console.log("Règles - future rules panel");
-      });
+      btnRules.addEventListener("click", () => showRulesModal());
 
       const version = document.createElement("p");
       version.style.fontSize = "var(--font-size-xs)";

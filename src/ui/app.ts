@@ -37,12 +37,14 @@ import {
   resolveTaxLuxury,
   resolveSell,
   resolveGuaranteedLodging,
+  resolveTempJob,
   resolveNight,
   resolveMaintenance,
   resolveEndTurn,
   advanceToNextPlayer,
   resolveDraftPick,
   resolveDraftValidate,
+  spawnAndExpireTempJobs,
 } from "../engine/resolver";
 import { BOARD } from "../engine/board";
 import { CellType } from "../engine/types";
@@ -224,6 +226,11 @@ export class App {
       case "guaranteedLodging":
         this.state = resolveGuaranteedLodging(this.state, player.id);
         break;
+      case "tempJob":
+        if (params?.offerId) {
+          this.state = resolveTempJob(this.state, player.id, params.offerId as string);
+        }
+        break;
     }
     this.updateUI();
   }
@@ -259,8 +266,23 @@ export class App {
     this.state = resolveEndTurn(this.state);
     if (this.state.phase === GamePhase.GAME_OVER) {
       this.navigate("endgame");
+    } else {
+      const workCells = this.getWorkCells();
+      this.state = spawnAndExpireTempJobs(this.state, workCells, this.dice);
     }
     this.updateUI();
+  }
+
+  getWorkCells(): { cellIndex: number; name: string }[] {
+    const estabs = this.theme.establishmentsByCellIndex;
+    if (!estabs) return [];
+    const result: { cellIndex: number; name: string }[] = [];
+    for (const [idx, estab] of Object.entries(estabs)) {
+      if (estab && estab.services.includes("work")) {
+        result.push({ cellIndex: Number(idx), name: estab.name });
+      }
+    }
+    return result;
   }
 
   getReachable(): CellIndex[] {
