@@ -17,6 +17,7 @@ export function createDraftScreen(app: App): ScreenRenderer {
   let validateBtn: HTMLButtonElement | null = null;
 
   let lastShownPlayerIndex = -1;
+  let introShown = false;
 
   function getAllDeckCards(state: { objectDeck: string[] }): string[] {
     return [...state.objectDeck];
@@ -255,6 +256,63 @@ export function createDraftScreen(app: App): ScreenRenderer {
     };
   }
 
+  function showIntroModal(): void {
+    const overlay = document.createElement("div");
+    overlay.className = "intro-modal-overlay";
+
+    const modal = document.createElement("div");
+    modal.className = "intro-modal";
+
+    modal.innerHTML = `
+      <h2>🏚️ Clodopoly</h2>
+      <p class="intro-subtitle">Les Billets Restent dans la Boîte</p>
+
+      <div class="intro-section">
+        <strong>🎯 Objectif</strong>
+        <p>Être le dernier survivant. Tout le monde descend — vous descendez juste en dernier.</p>
+      </div>
+
+      <div class="intro-section">
+        <strong>📉 Chaque tour, vous perdez</strong>
+        <p>Nourriture (20€+), logement (30–120€), transport. Même avec un emploi, le budget est déficitaire. La spirale est inévitable.</p>
+      </div>
+
+      <div class="intro-section">
+        <strong>🤝 Le Camp sauve… ou détruit</strong>
+        <p>Terminez un tour sur la même case qu'un autre joueur → vous formez un <strong>Camp</strong>. Coûts partagés, +1 PC. Mais la nuit, chacun choisit en secret : <em>dormir, veiller, fouiller,</em> ou <em>se servir</em> dans les affaires des autres.</p>
+      </div>
+
+      <div class="intro-section">
+        <strong>🌙 La nuit, 4 choix</strong>
+        <ul>
+          <li>😴 <strong>Dormir</strong> — repos, +1 PC, mais vulnérable au vol</li>
+          <li>👁️ <strong>Veiller</strong> — protège le camp, bloque les voleurs</li>
+          <li>🔦 <strong>Fouiller</strong> — trouver des objets, mais vos affaires sont sans garde</li>
+          <li>🤚 <strong>Se servir</strong> — prendre un objet d'un dormeur. Risqué si un veilleur est là</li>
+        </ul>
+      </div>
+
+      <div class="intro-section">
+        <strong>🃏 Le Draft</strong>
+        <p>Choisissez vos objets de départ (5 PC à répartir, voiture incluse). Plus d'objets = résilience. Moins d'objets mais chers = PC élevés mais fragiles.</p>
+      </div>
+
+      <div class="intro-section">
+        <strong>💀 Élimination</strong>
+        <p>0 PV = éliminé. PC trop bas = licencié. Bâtiments condamnés tous les 4 tours. L'inflation monte. Personne ne s'en sort seul.</p>
+      </div>
+    `;
+
+    const btn = document.createElement("button");
+    btn.className = "action-btn primary intro-start-btn";
+    btn.textContent = "Commencer le draft";
+    btn.addEventListener("click", () => overlay.remove());
+    modal.appendChild(btn);
+
+    overlay.appendChild(modal);
+    if (root) root.appendChild(overlay);
+  }
+
   return {
     mount(container: HTMLElement): void {
       root = document.createElement("div");
@@ -267,6 +325,11 @@ export function createDraftScreen(app: App): ScreenRenderer {
       root.appendChild(draftContent);
 
       container.appendChild(root);
+
+      if (!introShown) {
+        introShown = true;
+        showIntroModal();
+      }
     },
 
     update(state: GameState): void {

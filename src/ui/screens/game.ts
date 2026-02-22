@@ -43,7 +43,7 @@ export function createGameScreen(app: App): ScreenRenderer {
   let autoActionKey = "";
   let actionDoneThisPhase = false;
   let prevJournalLength = 0;
-  let introShown = false;
+  
 
   // ── helpers ───────────────────────────────────────────────────────
 
@@ -199,63 +199,6 @@ export function createGameScreen(app: App): ScreenRenderer {
     root.appendChild(nightOverlay);
 
     container.appendChild(root);
-
-    if (!introShown) {
-      introShown = true;
-      showIntroModal();
-    }
-  }
-
-  function showIntroModal(): void {
-    const overlay = document.createElement("div");
-    overlay.className = "intro-modal-overlay";
-
-    const modal = document.createElement("div");
-    modal.className = "intro-modal";
-
-    modal.innerHTML = `
-      <h2>🏚️ Clodopoly</h2>
-      <p class="intro-subtitle">Les Billets Restent dans la Boîte</p>
-
-      <div class="intro-section">
-        <strong>🎯 Objectif</strong>
-        <p>Être le dernier survivant. Tout le monde descend — vous descendez juste en dernier.</p>
-      </div>
-
-      <div class="intro-section">
-        <strong>📉 Chaque tour, vous perdez</strong>
-        <p>Nourriture (${app.state?.foodCost ?? 20}€), logement (30–120€), transport. Même avec un emploi, le budget est déficitaire. La spirale est inévitable.</p>
-      </div>
-
-      <div class="intro-section">
-        <strong>🤝 Le Camp sauve… ou détruit</strong>
-        <p>Terminez un tour sur la même case qu'un autre joueur → vous formez un <strong>Camp</strong>. Coûts partagés, +1 PC. Mais la nuit, chacun choisit en secret : <em>dormir, veiller, fouiller,</em> ou <em>se servir</em> dans les affaires des autres.</p>
-      </div>
-
-      <div class="intro-section">
-        <strong>🌙 La nuit, 4 choix</strong>
-        <ul>
-          <li>😴 <strong>Dormir</strong> — repos, +1 PC, mais vulnérable</li>
-          <li>👁️ <strong>Veiller</strong> — protège le camp, bloque les voleurs</li>
-          <li>🔦 <strong>Fouiller</strong> — trouver des objets, mais vos affaires sont sans garde</li>
-          <li>🤚 <strong>Se servir</strong> — prendre un objet d'un dormeur. Risqué si un veilleur est là.</li>
-        </ul>
-      </div>
-
-      <div class="intro-section">
-        <strong>💀 Élimination</strong>
-        <p>0 PV = éliminé (2 tours fantôme). 0 PC = licencié. Plus de bâtiments = plus d'abris. L'inflation augmente tous les 4 tours.</p>
-      </div>
-    `;
-
-    const btn = document.createElement("button");
-    btn.className = "action-btn primary intro-start-btn";
-    btn.textContent = "C'est parti";
-    btn.addEventListener("click", () => overlay.remove());
-    modal.appendChild(btn);
-
-    overlay.appendChild(modal);
-    if (root) root.appendChild(overlay);
   }
 
   // ── update ────────────────────────────────────────────────────────
