@@ -272,13 +272,10 @@ export function createGameScreen(app: App): ScreenRenderer {
     rightGroup.className = "top-bar-right";
 
     const foodSpan = document.createElement("span");
-    foodSpan.textContent = `🍽️ ${state.foodCost}€`;
+    foodSpan.title = "Coût de la nourriture par nuit";
+    foodSpan.textContent = `🍽️ ${state.foodCost}€/nuit`;
 
-    const shelterCount = state.buildingsRemaining;
-    const shelterSpan = document.createElement("span");
-    shelterSpan.textContent = `🏠 ${shelterCount}`;
-
-    rightGroup.append(foodSpan, shelterSpan);
+    rightGroup.append(foodSpan);
 
     topBar.append(leftGroup, centerGroup, rightGroup);
   }
@@ -525,19 +522,10 @@ export function createGameScreen(app: App): ScreenRenderer {
     return stepper;
   }
 
-  function buildDayClockBanner(state: GameState): void {
-    const area = getActionArea();
-    if (!area) return;
-    const banner = buildDayStepperHTML(state);
-    area.appendChild(banner);
-  }
-
   function updateActionBar(state: GameState): void {
     const area = getActionArea();
     if (!area) return;
     area.innerHTML = "";
-
-    buildDayClockBanner(state);
 
     const player = getCurrentPlayer(state);
 

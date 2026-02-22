@@ -356,27 +356,6 @@ body {
   width: 100%;
 }
 
-.center-action-area > .day-stepper {
-  padding: 10px 20px;
-  border: 1px solid var(--accent);
-  justify-content: center;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.center-action-area > .day-stepper .day-stepper-step {
-  font-size: 1.3rem;
-}
-
-.center-action-area > .day-stepper .day-stepper-step.active {
-  font-size: 1.8rem;
-}
-
-.center-action-area > .day-stepper .day-stepper-seg {
-  width: 24px;
-  height: 4px;
-  margin: 0 4px;
-}
 
 .center-btn-row {
   display: flex;
