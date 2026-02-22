@@ -316,15 +316,106 @@ body {
   border-radius: var(--border-radius);
 }
 
-.board-center .game-title {
-  font-size: var(--font-size-lg);
-  font-weight: 700;
-  margin-bottom: var(--space-sm);
+.center-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: var(--space-md);
 }
 
-.board-center .phase-info {
+.center-player-tag {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+}
+
+.center-player-dot {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.center-phase-tag {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.center-action-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  max-width: 400px;
+  width: 100%;
+}
+
+.center-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  justify-content: center;
+}
+
+.center-case-header {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  text-align: center;
+}
+
+.center-case-detail {
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
+  text-align: center;
+}
+
+.center-focus-area {
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+  width: 100%;
+}
+
+.focus-title {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+
+.focus-detail {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.focus-players {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-top: var(--space-xs);
+}
+
+.dice-result-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.dice-result-display .dice-result {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.dice-result-display .dice-detail {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
 }
 
 .pawn {
@@ -435,7 +526,6 @@ body {
   flex: 1;
   min-height: 0;
   padding-top: var(--top-bar-height);
-  padding-bottom: var(--action-bar-height);
 }
 
 .night-overlay {

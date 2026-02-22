@@ -35,7 +35,6 @@ export function createGameScreen(app: App): ScreenRenderer {
   let root: HTMLElement | null = null;
   let topBar: HTMLElement | null = null;
   let sidePanel: HTMLElement | null = null;
-  let actionBar: HTMLElement | null = null;
   let nightOverlay: HTMLElement | null = null;
   let board: ReturnType<typeof createBoard> | null = null;
 
@@ -107,16 +106,12 @@ export function createGameScreen(app: App): ScreenRenderer {
     layout.appendChild(boardContainer);
     layout.appendChild(sidePanel);
 
-    actionBar = document.createElement("div");
-    actionBar.className = "action-bar";
-
     nightOverlay = document.createElement("div");
     nightOverlay.className = "night-overlay";
     nightOverlay.style.display = "none";
 
     root.appendChild(topBar);
     root.appendChild(layout);
-    root.appendChild(actionBar);
     root.appendChild(nightOverlay);
 
     container.appendChild(root);
@@ -383,9 +378,14 @@ export function createGameScreen(app: App): ScreenRenderer {
 
   // ── action bar ────────────────────────────────────────────────────
 
+  function getActionArea(): HTMLElement | null {
+    return board?.actionArea ?? null;
+  }
+
   function updateActionBar(state: GameState): void {
-    if (!actionBar) return;
-    actionBar.innerHTML = "";
+    const area = getActionArea();
+    if (!area) return;
+    area.innerHTML = "";
 
     const player = getCurrentPlayer(state);
 
@@ -400,17 +400,19 @@ export function createGameScreen(app: App): ScreenRenderer {
 
       case GamePhase.NIGHT:
         if (app.allNightChoicesMade()) {
-          addActionButton(actionBar, "🌙 Résoudre la nuit", () => app.resolveNightPhase(), true);
+          addActionButton(area, "🌙 Résoudre la nuit", () => app.resolveNightPhase(), true);
+        } else {
+          addInfoText(area, "En attente des choix de nuit...");
         }
         break;
 
       case GamePhase.NIGHT_RESOLUTION:
-        addActionButton(actionBar, "🌙 Résolution", () => app.resolveNightPhase(), true);
+        addActionButton(area, "🌙 Résolution", () => app.resolveNightPhase(), true);
         break;
 
       case GamePhase.MAINTENANCE:
         addActionButton(
-          actionBar,
+          area,
           `🔧 ${app.lang.ui.maintenance ?? "Résoudre la maintenance"}`,
           () => app.resolveMaintenancePhase(),
           true,
@@ -418,36 +420,41 @@ export function createGameScreen(app: App): ScreenRenderer {
         break;
 
       case GamePhase.END_TURN:
-        addActionButton(actionBar, "⏭️ Tour suivant", () => app.resolveEndTurnPhase(), true);
+        addActionButton(area, "⏭️ Tour suivant", () => app.resolveEndTurnPhase(), true);
         break;
     }
   }
 
   function buildMovementActions(state: GameState): void {
-    if (!actionBar) return;
+    const area = getActionArea();
+    if (!area) return;
 
     if (!app.hasTransportSelected()) {
+      addInfoText(area, "Choisissez votre transport");
+      const btnRow = document.createElement("div");
+      btnRow.className = "center-btn-row";
       addActionButton(
-        actionBar,
+        btnRow,
         `🚗 ${app.lang.transport.car.name}`,
         () => app.chooseTransport(TransportMode.CAR),
       );
       addActionButton(
-        actionBar,
+        btnRow,
         `🚌 ${app.lang.transport.bus.name}`,
         () => app.chooseTransport(TransportMode.BUS),
       );
       addActionButton(
-        actionBar,
+        btnRow,
         `🚶 ${app.lang.transport.foot.name}`,
         () => app.chooseTransport(TransportMode.FOOT),
       );
+      area.appendChild(btnRow);
       return;
     }
 
     if (!app.hasDiceRolled()) {
       addActionButton(
-        actionBar,
+        area,
         `🎲 ${app.lang.ui.rollDice ?? "Lancer les dés"}`,
         () => app.rollDice(),
         true,
@@ -462,34 +469,46 @@ export function createGameScreen(app: App): ScreenRenderer {
       const bonus = info?.bonus ?? 0;
       const total = sum + bonus;
       const parts = dice.join(" + ") + (bonus ? ` + ${bonus}` : "");
-      addInfoText(actionBar, `🎲 ${app.lang.ui.result ?? "Résultat"}: ${parts} = ${total}`);
+
+      const diceDisplay = document.createElement("div");
+      diceDisplay.className = "dice-result-display";
+      diceDisplay.innerHTML = `<span class="dice-result">${total}</span><span class="dice-detail">${parts}</span>`;
+      area.appendChild(diceDisplay);
     }
-    addInfoText(actionBar, app.lang.ui.chooseCell ?? "Choisissez votre case");
+    addInfoText(area, "👆 Cliquez une case dorée sur le plateau");
   }
 
   function buildCaseActions(state: GameState, player: PlayerState): void {
-    if (!actionBar) return;
+    const area = getActionArea();
+    if (!area) return;
     const cell = BOARD[player.position];
+    const cellName = getCellDisplayName(player.position, app.lang, app.theme);
+
+    const headerText = document.createElement("div");
+    headerText.className = "center-case-header";
+    headerText.textContent = `${CELL_ICONS_GAME[cell.type] ?? "📍"} ${cellName}`;
+    area.appendChild(headerText);
 
     switch (cell.type) {
       case CellType.PROPERTY: {
-        const name = getCellDisplayName(player.position, app.lang, app.theme);
         const building = state.buildings.get(player.position);
-        let nightInfo: string;
+        const info = document.createElement("div");
+        info.className = "center-case-detail";
         if (building === "hotel") {
-          nightInfo = `🏨 Hôtel — Nuit : ${cell.hotelCost ?? "?"}€`;
+          info.textContent = `🏨 Hôtel — Nuit : ${cell.hotelCost ?? "?"}€`;
         } else if (building === "house") {
-          nightInfo = `🏠 Maison — Nuit : ${cell.nightCost ?? "?"}€`;
+          info.textContent = `🏠 Maison — Nuit : ${cell.nightCost ?? "?"}€`;
         } else {
-          nightInfo = `❌ Pas d'abri — Dormir dehors (-1 PV, -1 PC)`;
+          info.textContent = `❌ Pas d'abri — Dormir dehors (-1 PV, -1 PC)`;
+          info.style.color = "var(--accent)";
         }
-        addInfoText(actionBar, `🏘️ ${name} · ${nightInfo}`);
+        area.appendChild(info);
         break;
       }
 
       case CellType.PETIT_BOULOT:
-        addActionButton(actionBar, "💼 Travailler (+80€)", () =>
-          app.caseAction("petitBoulot"),
+        addActionButton(area, "💼 Travailler (+80€)", () =>
+          app.caseAction("petitBoulot"), true,
         );
         break;
 
@@ -498,6 +517,8 @@ export function createGameScreen(app: App): ScreenRenderer {
         const marketIndex = marketCells.findIndex(c => c.index === player.position);
         if (marketIndex >= 0 && state.marketCards[marketIndex]) {
           const slots = state.marketCards[marketIndex];
+          const btnRow = document.createElement("div");
+          btnRow.className = "center-btn-row";
           for (let si = 0; si < slots.length; si++) {
             const cardId = slots[si];
             if (!cardId) continue;
@@ -505,64 +526,72 @@ export function createGameScreen(app: App): ScreenRenderer {
             const name = getCardName(cardId, app.lang);
             const slotIndex = si;
             addActionButton(
-              actionBar,
-              `🛒 Acheter ${name} (${def?.price ?? "?"}€)`,
+              btnRow,
+              `🛒 ${name} (${def?.price ?? "?"}€)`,
               () => app.caseAction("marketBuy", { marketIndex, slotIndex }),
             );
           }
+          area.appendChild(btnRow);
         }
         break;
       }
 
       case CellType.SHOWER:
-        addActionButton(actionBar, "🚿 Se doucher (+1 PC)", () =>
-          app.caseAction("shower"),
+        addActionButton(area, "🚿 Se doucher (+1 PC)", () =>
+          app.caseAction("shower"), true,
         );
         break;
 
       case CellType.CLINIC:
-        addActionButton(actionBar, "🏥 Se soigner (+1 PV, -50€)", () =>
-          app.caseAction("clinic"),
+        addActionButton(area, "🏥 Se soigner (+1 PV, -50€)", () =>
+          app.caseAction("clinic"), true,
         );
         break;
 
       case CellType.WORKPLACE:
         if (player.job) {
-          addActionButton(actionBar, "🏢 Pointer", () =>
-            app.caseAction("workplace"),
+          addActionButton(area, "🏢 Pointer au travail", () =>
+            app.caseAction("workplace"), true,
           );
         } else {
+          const btnRow = document.createElement("div");
+          btnRow.className = "center-btn-row";
           for (const jobType of state.availableJobs) {
             const name = getJobName(jobType, app.lang);
-            addActionButton(actionBar, `📋 Postuler: ${name}`, () =>
+            addActionButton(btnRow, `📋 Postuler: ${name}`, () =>
               app.caseAction("hire", { jobType }),
             );
           }
+          area.appendChild(btnRow);
         }
         break;
-
-      case CellType.SHELTER: {
-        const name = getCellDisplayName(player.position, app.lang, app.theme);
-        addInfoText(actionBar, `🏠 ${name}`);
-        break;
-      }
-
-      case CellType.PAYDAY: {
-        const name = getCellDisplayName(player.position, app.lang, app.theme);
-        addInfoText(actionBar, `💰 ${name}`);
-        break;
-      }
 
       default:
         break;
     }
 
     addActionButton(
-      actionBar,
+      area,
       `⏭️ ${app.lang.ui.skip ?? "Passer"}`,
       () => app.skipAction(),
     );
   }
+
+  const CELL_ICONS_GAME: Record<string, string> = {
+    [CellType.PROPERTY]: "🏘️",
+    [CellType.PETIT_BOULOT]: "💼",
+    [CellType.MARKET]: "🛒",
+    [CellType.SHOWER]: "🚿",
+    [CellType.CLINIC]: "🏥",
+    [CellType.EVENT]: "❓",
+    [CellType.SCAVENGE]: "🔍",
+    [CellType.PAYDAY]: "💰",
+    [CellType.WORKPLACE]: "🏢",
+    [CellType.SHELTER]: "🏠",
+    [CellType.ROUNDUP]: "🚨",
+    [CellType.TAX_INCOME]: "📈",
+    [CellType.TAX_LUXURY]: "💸",
+  };
 
   // ── night overlay ─────────────────────────────────────────────────
 
@@ -677,7 +706,6 @@ export function createGameScreen(app: App): ScreenRenderer {
     root = null;
     topBar = null;
     sidePanel = null;
-    actionBar = null;
     nightOverlay = null;
     board = null;
     nightPlayerShowing = null;

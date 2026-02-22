@@ -37,9 +37,13 @@ function cellToGrid(index: number): { row: number; col: number } {
   return { row: index - 29, col: 11 };
 }
 
-export function createBoard(
-  app: App,
-): { el: HTMLElement; update(state: GameState): void } {
+export interface BoardComponent {
+  el: HTMLElement;
+  actionArea: HTMLElement;
+  update(state: GameState): void;
+}
+
+export function createBoard(app: App): BoardComponent {
   const grid = document.createElement("div");
   grid.className = "board-grid";
 
@@ -48,15 +52,27 @@ export function createBoard(
   center.style.gridColumn = "2 / 11";
   center.style.gridRow = "2 / 11";
 
-  const gameTitle = document.createElement("h2");
-  gameTitle.className = "game-title";
-  gameTitle.textContent = "Clodopoly";
+  const centerHeader = document.createElement("div");
+  centerHeader.className = "center-header";
 
-  const phaseInfo = document.createElement("p");
-  phaseInfo.className = "phase-info";
+  const phaseTag = document.createElement("span");
+  phaseTag.className = "center-phase-tag";
 
-  center.appendChild(gameTitle);
-  center.appendChild(phaseInfo);
+  const playerTag = document.createElement("span");
+  playerTag.className = "center-player-tag";
+
+  centerHeader.appendChild(playerTag);
+  centerHeader.appendChild(phaseTag);
+
+  const actionArea = document.createElement("div");
+  actionArea.className = "center-action-area";
+
+  const focusArea = document.createElement("div");
+  focusArea.className = "center-focus-area";
+
+  center.appendChild(centerHeader);
+  center.appendChild(actionArea);
+  center.appendChild(focusArea);
   grid.appendChild(center);
 
   const cells = new Map<CellIndex, HTMLElement>();
@@ -90,7 +106,6 @@ export function createBoard(
     if (def.type === CellType.PROPERTY) {
       const costTag = document.createElement("span");
       costTag.className = "cell-cost";
-      costTag.dataset.cellIndex = String(def.index);
       el.appendChild(costTag);
     }
 
@@ -103,30 +118,48 @@ export function createBoard(
         app.chooseCell(def.index);
         return;
       }
-      const cellName = getCellDisplayName(def.index, app.lang, app.theme);
-      let details = `${CELL_ICONS[def.type]} ${cellName}`;
-      if (def.type === CellType.PROPERTY) {
-        const building = app.state.buildings.get(def.index);
-        if (building === "hotel") {
-          details += `\n🏨 Hôtel · Nuit : ${def.hotelCost}€`;
-        } else if (building === "house") {
-          details += `\n🏠 Maison · Nuit : ${def.nightCost}€`;
-        } else {
-          details += `\n❌ Pas d'abri`;
-        }
-      }
-      const playersHere = app.state.players.filter(
-        p => p.position === def.index && p.status !== PlayerStatus.ELIMINATED,
-      );
-      if (playersHere.length > 0) {
-        details += `\n👥 ${playersHere.map(p => p.name).join(", ")}`;
-      }
-      phaseInfo.style.whiteSpace = "pre-line";
-      phaseInfo.textContent = details;
+      showCellFocus(def.index, app.state);
     });
 
     cells.set(def.index, el);
     grid.appendChild(el);
+  }
+
+  function showCellFocus(cellIndex: CellIndex, state: GameState): void {
+    const def = BOARD[cellIndex];
+    const cellName = getCellDisplayName(cellIndex, app.lang, app.theme);
+    focusArea.innerHTML = "";
+    focusArea.style.display = "block";
+
+    const title = document.createElement("div");
+    title.className = "focus-title";
+    title.textContent = `${CELL_ICONS[def.type]} ${cellName}`;
+    focusArea.appendChild(title);
+
+    if (def.type === CellType.PROPERTY) {
+      const building = state.buildings.get(cellIndex);
+      const info = document.createElement("div");
+      info.className = "focus-detail";
+      if (building === "hotel") {
+        info.textContent = `🏨 Hôtel · Nuit : ${def.hotelCost}€`;
+      } else if (building === "house") {
+        info.textContent = `🏠 Maison · Nuit : ${def.nightCost}€`;
+      } else {
+        info.textContent = `❌ Pas d'abri`;
+        info.style.color = "var(--text-muted)";
+      }
+      focusArea.appendChild(info);
+    }
+
+    const playersHere = state.players.filter(
+      p => p.position === cellIndex && p.status !== PlayerStatus.ELIMINATED,
+    );
+    if (playersHere.length > 0) {
+      const pl = document.createElement("div");
+      pl.className = "focus-players";
+      pl.textContent = `👥 ${playersHere.map(p => p.name).join(", ")}`;
+      focusArea.appendChild(pl);
+    }
   }
 
   function update(state: GameState): void {
@@ -193,6 +226,7 @@ export function createBoard(
       el.classList.toggle("highlight", reachable.has(idx));
     }
 
+    const player = state.players[state.currentPlayerIndex];
     const labels: Record<string, string> = {
       [GamePhase.MOVEMENT]: app.lang.ui.movement ?? "Déplacement",
       [GamePhase.ACTION]: "Action",
@@ -202,9 +236,20 @@ export function createBoard(
       [GamePhase.END_TURN]: "Fin du tour",
       [GamePhase.GAME_OVER]: app.lang.ui.gameOver ?? "Fin de partie",
     };
-    phaseInfo.textContent =
-      `${labels[state.phase] ?? state.phase} — ${app.lang.ui.turn ?? "Tour"} ${state.turn}`;
+
+    phaseTag.textContent = `${labels[state.phase] ?? state.phase} · Tour ${state.turn}`;
+
+    playerTag.innerHTML = "";
+    if (player) {
+      const dot = document.createElement("span");
+      dot.className = "center-player-dot";
+      dot.style.backgroundColor = player.color;
+      playerTag.appendChild(dot);
+      playerTag.appendChild(document.createTextNode(player.name));
+    }
+
+    focusArea.style.display = "none";
   }
 
-  return { el: grid, update };
+  return { el: grid, actionArea, update };
 }
