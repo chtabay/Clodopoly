@@ -242,7 +242,7 @@ export function createDraftScreen(app: App): ScreenRenderer {
       dot.style.verticalAlign = "middle";
       title.appendChild(dot);
       title.appendChild(
-        document.createTextNode(`${app.lang.ui.draft ?? "Draft"} — ${player.name}`),
+        document.createTextNode(`Équipement — ${player.name}`),
       );
       header.appendChild(title);
     }
@@ -293,8 +293,8 @@ export function createDraftScreen(app: App): ScreenRenderer {
       </div>
 
       <div class="intro-section">
-        <strong>🃏 Le Draft</strong>
-        <p>Choisissez vos objets de départ (5 PC à répartir, voiture incluse). Plus d'objets = résilience. Moins d'objets mais chers = PC élevés mais fragiles.</p>
+        <strong>🃏 Votre équipement de départ</strong>
+        <p>Choisissez vos objets (5 PC à répartir, voiture incluse). Plus d'objets = résilience aux pertes. Moins d'objets mais de valeur = PC élevés mais fragiles.</p>
       </div>
 
       <div class="intro-section">
@@ -305,7 +305,7 @@ export function createDraftScreen(app: App): ScreenRenderer {
 
     const btn = document.createElement("button");
     btn.className = "action-btn primary intro-start-btn";
-    btn.textContent = "Commencer le draft";
+    btn.textContent = "Choisir son équipement";
     btn.addEventListener("click", () => overlay.remove());
     modal.appendChild(btn);
 

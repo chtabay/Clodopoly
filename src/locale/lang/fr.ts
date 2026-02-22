@@ -30,7 +30,7 @@ export const LANG_FR: LangData = {
     playerCount: "Nombre de joueurs",
     language: "Langue",
     locationTheme: "Thème de lieu",
-    draft: "Draft",
+    draft: "Équipement",
     draftTitle: "Composez votre profil",
     selection: "Sélection",
     pcCounter: "PC",
