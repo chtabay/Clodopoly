@@ -26,6 +26,15 @@ export function createDraftScreen(app: App): ScreenRenderer {
     return inventory.some((id) => id.startsWith("obj_car"));
   }
 
+  function autoPickCar(state: GameState): void {
+    const player = getCurrentPlayer(state);
+    if (hasCar(player.inventory)) return;
+    const carCard = state.objectDeck.find(id => id.startsWith("obj_car") && !player.inventory.includes(id));
+    if (carCard) {
+      app.draftPick(player.id, carCard);
+    }
+  }
+
   function buildTransitionOverlay(): HTMLElement {
     const overlay = document.createElement("div");
     overlay.className = "transition-screen";
@@ -119,6 +128,9 @@ export function createDraftScreen(app: App): ScreenRenderer {
       const def = getCardDef(cardId);
       if (!def) continue;
 
+      const isCar = cardId.startsWith("obj_car");
+      if (isCar) continue;
+
       const cardEl = document.createElement("div");
       const isSelected = playerInventorySet.has(cardId);
       const cardPc = def.pcValue ?? 0;
@@ -210,7 +222,9 @@ export function createDraftScreen(app: App): ScreenRenderer {
 
     const carCheck = document.createElement("div");
     carCheck.style.marginTop = "8px";
-    carCheck.textContent = `${carOk ? "✅" : "❌"} Voiture obligatoire`;
+    carCheck.style.fontSize = "var(--font-size-xs)";
+    carCheck.style.color = "var(--text-muted)";
+    carCheck.textContent = `🚗 Voiture incluse (3 PC). Choisissez 5 PC d'objets.`;
     playerProfile.appendChild(carCheck);
 
     const header = root.querySelector(".draft-header");
@@ -264,6 +278,8 @@ export function createDraftScreen(app: App): ScreenRenderer {
         lastShownPlayerIndex = currentPlayerIndex;
         if (transitionOverlay) transitionOverlay.style.display = "flex";
         if (draftContent) draftContent.style.display = "none";
+
+        autoPickCar(state);
       }
 
       const player = getCurrentPlayer(state);
