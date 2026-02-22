@@ -356,47 +356,26 @@ body {
   width: 100%;
 }
 
-.day-clock-banner {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  padding: 8px 16px;
-  background: var(--bg-panel-alt);
-  border-radius: var(--border-radius);
+.center-action-area > .day-stepper {
+  padding: 10px 20px;
   border: 1px solid var(--accent);
+  justify-content: center;
   width: 100%;
   box-sizing: border-box;
 }
 
-.day-clock-banner.night {
-  border-color: var(--accent-dim);
+.center-action-area > .day-stepper .day-stepper-step {
+  font-size: 1.3rem;
 }
 
-.day-clock-banner-icon {
-  font-size: 1.5rem;
-  line-height: 1;
+.center-action-area > .day-stepper .day-stepper-step.active {
+  font-size: 1.8rem;
 }
 
-.day-clock-banner-text {
-  font-size: var(--font-size-base);
-  font-weight: 700;
-  color: var(--text-primary);
-  flex: 1;
-}
-
-.day-clock-banner-track {
-  width: 60px;
-  height: 6px;
-  background: var(--bg-panel);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.day-clock-banner-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--accent-dim));
-  border-radius: 3px;
-  transition: width 0.3s ease;
+.center-action-area > .day-stepper .day-stepper-seg {
+  width: 24px;
+  height: 4px;
+  margin: 0 4px;
 }
 
 .center-btn-row {
@@ -1014,42 +993,48 @@ body {
   font-weight: 700;
 }
 
-.day-clock {
-  display: inline-flex;
+.day-stepper {
+  display: flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 0;
   padding: 4px 10px;
   background: var(--bg-panel-alt);
   border-radius: var(--border-radius);
-  font-size: var(--font-size-sm);
-  color: var(--text-primary);
   flex-shrink: 0;
   border: 1px solid var(--border-color);
 }
 
-.day-clock-icon {
-  font-size: 1.2rem;
+.day-stepper-step {
+  font-size: 1.1rem;
   line-height: 1;
+  transition: transform 0.3s, opacity 0.3s;
 }
 
-.day-clock-label {
-  white-space: nowrap;
-  font-weight: 600;
+.day-stepper-step.active {
+  font-size: 1.5rem;
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 4px rgba(255, 200, 50, 0.6));
 }
 
-.day-clock-track {
-  width: 48px;
-  height: 4px;
-  background: var(--bg-panel);
+.day-stepper-step.past {
+  opacity: 0.35;
+}
+
+.day-stepper-step.future {
+  opacity: 0.25;
+}
+
+.day-stepper-seg {
+  width: 16px;
+  height: 3px;
+  background: var(--border-color);
   border-radius: 2px;
-  overflow: hidden;
+  margin: 0 2px;
+  transition: background 0.3s;
 }
 
-.day-clock-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--accent-dim));
-  border-radius: 2px;
-  transition: width 0.3s ease;
+.day-stepper-seg.done {
+  background: var(--accent);
 }
 
 /* --------------------------------------------------------------------------

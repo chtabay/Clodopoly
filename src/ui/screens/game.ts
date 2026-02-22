@@ -11,7 +11,6 @@ import { BOARD } from "../../engine/board";
 import { getCellDisplayName, getCardName, getJobName, getEstablishment } from "../../locale/i18n";
 import { getCardDef } from "../../engine/cards";
 import { getCurrentPlayer } from "../../engine/state";
-import { ACTIONS_PER_PLAYER_PER_DAY } from "../../engine/constants";
 import { createBoard } from "../components/board";
 
 
@@ -266,38 +265,7 @@ export function createGameScreen(app: App): ScreenRenderer {
     const centerGroup = document.createElement("div");
     centerGroup.className = "top-bar-center";
 
-    const roundsInDay = state.roundsInDay ?? 0;
-    const currentRound = roundsInDay + 1;
-    const dayClock = document.createElement("div");
-    dayClock.className = "day-clock";
-    if (
-      (state.phase === GamePhase.MOVEMENT || state.phase === GamePhase.ACTION) &&
-      currentRound <= ACTIONS_PER_PLAYER_PER_DAY
-    ) {
-      const progress = currentRound / ACTIONS_PER_PLAYER_PER_DAY;
-      const icons = ["🌞", "🌤️", "🌅", "🌙"];
-      const icon = icons[Math.min(currentRound - 1, icons.length - 1)];
-      const isLast = currentRound === ACTIONS_PER_PLAYER_PER_DAY;
-      const label = isLast
-        ? (app.lang.ui.lastRound ?? "Dernière manche !")
-        : `${app.lang.ui.round ?? "Manche"} ${currentRound}/${ACTIONS_PER_PLAYER_PER_DAY}`;
-      dayClock.innerHTML = `
-        <span class="day-clock-icon">${icon}</span>
-        <span class="day-clock-label">${label}</span>
-        <div class="day-clock-track"><div class="day-clock-fill" style="width: ${progress * 100}%"></div></div>
-      `;
-    } else if (
-      state.phase === GamePhase.NIGHT ||
-      state.phase === GamePhase.NIGHT_RESOLUTION ||
-      state.phase === GamePhase.MAINTENANCE
-    ) {
-      dayClock.innerHTML = `
-        <span class="day-clock-icon">🌙</span>
-        <span class="day-clock-label">${app.lang.ui.nightPhase ?? "Nuit"}</span>
-      `;
-    } else {
-      dayClock.style.display = "none";
-    }
+    const dayClock = buildDayStepperHTML(state);
     centerGroup.appendChild(dayClock);
 
     const rightGroup = document.createElement("div");
@@ -517,43 +485,51 @@ export function createGameScreen(app: App): ScreenRenderer {
     return board?.actionArea ?? null;
   }
 
+  const DAY_STEPS = ["🌞", "🌤️", "🌅", "🌙"];
+
+  function buildDayStepperHTML(state: GameState): HTMLElement {
+    const stepper = document.createElement("div");
+    stepper.className = "day-stepper";
+
+    const roundsInDay = state.roundsInDay ?? 0;
+    const isNight = state.phase === GamePhase.NIGHT ||
+      state.phase === GamePhase.NIGHT_RESOLUTION ||
+      state.phase === GamePhase.MAINTENANCE;
+    const activeIdx = isNight ? DAY_STEPS.length : roundsInDay;
+
+    for (let i = 0; i < DAY_STEPS.length; i++) {
+      if (i > 0) {
+        const seg = document.createElement("div");
+        seg.className = "day-stepper-seg" + (i <= activeIdx ? " done" : "");
+        stepper.appendChild(seg);
+      }
+      const step = document.createElement("span");
+      step.className = "day-stepper-step";
+      if (i === activeIdx) step.classList.add("active");
+      else if (i < activeIdx) step.classList.add("past");
+      else step.classList.add("future");
+      step.textContent = DAY_STEPS[i];
+      stepper.appendChild(step);
+    }
+
+    if (isNight) {
+      const seg = document.createElement("div");
+      seg.className = "day-stepper-seg done";
+      stepper.appendChild(seg);
+      const nightStep = document.createElement("span");
+      nightStep.className = "day-stepper-step active";
+      nightStep.textContent = "💤";
+      stepper.appendChild(nightStep);
+    }
+
+    return stepper;
+  }
+
   function buildDayClockBanner(state: GameState): void {
     const area = getActionArea();
     if (!area) return;
-    const roundsInDay = state.roundsInDay ?? 0;
-    const currentRound = roundsInDay + 1;
-    if (
-      (state.phase === GamePhase.MOVEMENT || state.phase === GamePhase.ACTION) &&
-      currentRound <= ACTIONS_PER_PLAYER_PER_DAY
-    ) {
-      const progress = currentRound / ACTIONS_PER_PLAYER_PER_DAY;
-      const icons = ["🌞", "🌤️", "🌅", "🌙"];
-      const icon = icons[Math.min(currentRound - 1, icons.length - 1)];
-      const isLast = currentRound === ACTIONS_PER_PLAYER_PER_DAY;
-      const label = isLast
-        ? (app.lang.ui.lastRound ?? "Dernière manche !")
-        : `${app.lang.ui.round ?? "Manche"} ${currentRound}/${ACTIONS_PER_PLAYER_PER_DAY}`;
-      const banner = document.createElement("div");
-      banner.className = "day-clock-banner" + (isLast ? " night" : "");
-      banner.innerHTML = `
-        <span class="day-clock-banner-icon">${icon}</span>
-        <span class="day-clock-banner-text">${label}</span>
-        <div class="day-clock-banner-track"><div class="day-clock-banner-fill" style="width: ${progress * 100}%"></div></div>
-      `;
-      area.appendChild(banner);
-    } else if (
-      state.phase === GamePhase.NIGHT ||
-      state.phase === GamePhase.NIGHT_RESOLUTION ||
-      state.phase === GamePhase.MAINTENANCE
-    ) {
-      const banner = document.createElement("div");
-      banner.className = "day-clock-banner night";
-      banner.innerHTML = `
-        <span class="day-clock-banner-icon">🌙</span>
-        <span class="day-clock-banner-text">${app.lang.ui.nightPhase ?? "Nuit"}</span>
-      `;
-      area.appendChild(banner);
-    }
+    const banner = buildDayStepperHTML(state);
+    area.appendChild(banner);
   }
 
   function updateActionBar(state: GameState): void {
