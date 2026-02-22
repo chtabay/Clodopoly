@@ -93,25 +93,19 @@ export function createBoard(app: App): BoardComponent {
       el.appendChild(bar);
     }
 
-    const icon = document.createElement("span");
-    icon.className = "cell-icon";
-    icon.textContent = CELL_ICONS[def.type];
-    el.appendChild(icon);
+    const cellDisplayName = getCellDisplayName(def.index, app.lang, app.theme);
+    const establishment = getEstablishment(def.index, app.theme);
 
     const name = document.createElement("span");
     name.className = "cell-name";
-    name.textContent = getCellDisplayName(def.index, app.lang, app.theme);
+    name.textContent = cellDisplayName;
     el.appendChild(name);
 
-    const establishment = getEstablishment(def.index, app.theme);
-    if (establishment && establishment.services.length > 0) {
+    if (establishment && establishment.name) {
       const estabSpan = document.createElement("span");
-      estabSpan.className = "cell-establishment";
-      estabSpan.textContent = establishment.name;
-      el.appendChild(estabSpan);
-    } else if (establishment && establishment.name) {
-      const estabSpan = document.createElement("span");
-      estabSpan.className = "cell-establishment symbolic";
+      estabSpan.className = establishment.services.length > 0
+        ? "cell-establishment"
+        : "cell-establishment symbolic";
       estabSpan.textContent = establishment.name;
       el.appendChild(estabSpan);
     }
@@ -121,6 +115,11 @@ export function createBoard(app: App): BoardComponent {
       costTag.className = "cell-cost";
       el.appendChild(costTag);
     }
+
+    let tooltip = cellDisplayName;
+    if (establishment?.name) tooltip += `\n${establishment.name}`;
+    if (def.nightCost) tooltip += `\nNuit : ${def.nightCost}€`;
+    el.title = tooltip;
 
     el.addEventListener("click", () => {
       if (!app.state) return;

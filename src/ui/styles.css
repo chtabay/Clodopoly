@@ -55,7 +55,7 @@
   --font-size-3xl: 2.5rem;
   
   /* Layout */
-  --panel-width: 380px;
+  --panel-width: 280px;
   --top-bar-height: 48px;
   --action-bar-height: 64px;
   --border-radius: 8px;
@@ -230,10 +230,10 @@ body {
   grid-template-columns: 1.5fr repeat(9, 1fr) 1.5fr;
   grid-template-rows: 1.5fr repeat(9, 1fr) 1.5fr;
   aspect-ratio: 1;
-  max-width: min(90vh, 65vw);
+  max-width: min(calc(100vh - var(--top-bar-height) - 16px), 80vw);
   background: var(--bg-panel);
   border-radius: var(--border-radius-lg);
-  padding: var(--space-xs);
+  padding: 2px;
   box-shadow: var(--shadow);
 }
 
@@ -249,10 +249,14 @@ body {
   justify-content: center;
   background: var(--bg-panel-alt);
   transition: border-color 0.2s, box-shadow 0.2s;
+  padding: 1px;
+  gap: 0;
 }
 
 .board-cell:hover {
-  border-color: var(--text-muted);
+  border-color: var(--accent);
+  z-index: 10;
+  overflow: visible;
 }
 
 .board-cell.corner {
@@ -265,7 +269,7 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: 8px;
+  height: 6px;
 }
 
 .cell-name {
@@ -274,13 +278,20 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: center;
-  padding: 0 var(--space-xs);
+  padding: 0 1px;
+  font-weight: 500;
+  line-height: 1.2;
 }
 
 .cell-icon {
-  font-size: 1.2em;
+  font-size: 1em;
   line-height: 1;
-  margin-bottom: var(--space-xs);
+}
+
+.board-cell:hover {
+  transform: scale(1.15);
+  z-index: 10;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.15);
 }
 
 /* Property color classes */
@@ -647,13 +658,15 @@ body {
 }
 
 .cell-establishment {
-  font-size: 0.5rem;
+  font-size: 0.45rem;
   color: var(--accent);
   display: block;
-  margin-top: 1px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 100%;
+  padding: 0 1px;
+  line-height: 1.1;
 }
 
 .cell-establishment.symbolic {
@@ -876,15 +889,44 @@ body {
 /* --------------------------------------------------------------------------
    4. PLAYER PANEL
    -------------------------------------------------------------------------- */
+.panel-toggle {
+  width: 20px;
+  flex-shrink: 0;
+  background: var(--bg-panel-alt);
+  border: none;
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.panel-toggle:hover {
+  background: var(--bg-panel);
+  color: var(--text-primary);
+}
+
 .side-panel {
   width: var(--panel-width);
   flex-shrink: 0;
   background: var(--bg-panel);
-  border-left: 1px solid var(--border-color);
+  border-left: none;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 0;
+  transition: width 0.25s ease, opacity 0.25s ease;
+}
+
+.side-panel.collapsed {
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  padding: 0;
 }
 
 .side-panel h4 {

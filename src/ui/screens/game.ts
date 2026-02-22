@@ -189,7 +189,17 @@ export function createGameScreen(app: App): ScreenRenderer {
     sidePanel = document.createElement("div");
     sidePanel.className = "side-panel";
 
+    const panelToggle = document.createElement("button");
+    panelToggle.className = "panel-toggle";
+    panelToggle.textContent = "‹";
+    panelToggle.title = "Replier/deplier le panneau";
+    panelToggle.addEventListener("click", () => {
+      sidePanel?.classList.toggle("collapsed");
+      panelToggle.textContent = sidePanel?.classList.contains("collapsed") ? "›" : "‹";
+    });
+
     layout.appendChild(boardContainer);
+    layout.appendChild(panelToggle);
     layout.appendChild(sidePanel);
 
     nightOverlay = document.createElement("div");
