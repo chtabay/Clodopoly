@@ -2,6 +2,14 @@
 
 > Ce document résume l'état du projet et ce qui reste à faire.
 
+## Objectif
+
+**Livrer un jeu entièrement jouable dans le navigateur, hébergé sur GitHub Pages à l'adresse https://chtabay.github.io/Clodopoly/.**
+
+Le moteur de jeu (logique, règles, résolution) est terminé et testé. Il tourne en TypeScript pur, sans DOM. Il ne sert à rien tant qu'aucune interface web ne l'appelle. Le travail du prochain agent est de **construire l'UI web qui appelle ce moteur**, pour que le jeu soit jouable du début (création de partie) à la fin (victoire) directement dans le navigateur.
+
+Le déploiement sur GitHub Pages est déjà automatisé : chaque push sur `master` déclenche un build Vite et un déploiement. Quand l'UI sera construite et branchée sur le moteur, le jeu sera immédiatement accessible en ligne.
+
 ## Contexte
 
 Clodopoly est un jeu de plateau web (survie sociale sur plateau de Monopoly). Le concept, les règles, les specs et le moteur de jeu sont terminés. L'interface web reste à construire proprement.
@@ -96,7 +104,20 @@ Suivre les lots 2.1 à 2.10 du plan d'implémentation. Ordre recommandé :
 ### 3. Intégration et déploiement
 
 - Lots 3.1 à 3.3 du plan : intégration moteur↔UI, polish, cas limites
-- Lot 4.1 : le CI/CD fonctionne déjà
+- Lot 4.1 : le CI/CD fonctionne déjà — chaque push sur master build et déploie automatiquement
+
+### Critère de "done"
+
+Le travail est terminé quand **https://chtabay.github.io/Clodopoly/ permet de jouer une partie complète** :
+- Créer une partie (2-5 joueurs, noms)
+- Drafter les cartes (8 PC, voiture obligatoire)
+- Jouer les tours (transport → dés → choix de case → action)
+- Voir le plateau avec les pions, bâtiments, et noms de rues (Poitiers)
+- Cliquer une case pour voir ses détails (panneau de focus)
+- Résoudre la phase de nuit (choix secrets entre joueurs en Camp)
+- Voir la maintenance (coûts, pertes, licenciements)
+- Voir les éliminations et la victoire du dernier survivant
+- Consulter le journal des événements à tout moment
 
 ## Points d'attention
 
