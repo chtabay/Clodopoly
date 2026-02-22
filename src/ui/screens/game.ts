@@ -266,29 +266,26 @@ export function createGameScreen(app: App): ScreenRenderer {
     const centerGroup = document.createElement("div");
     centerGroup.className = "top-bar-center";
 
-    const activePlayers = state.players.filter(p => p.status !== PlayerStatus.ELIMINATED);
     const roundsInDay = state.roundsInDay ?? 0;
-    const actionsBeforeNight = Math.max(
-      0,
-      (ACTIONS_PER_PLAYER_PER_DAY - roundsInDay - 1) * activePlayers.length +
-        (activePlayers.length - state.currentPlayerIndex),
-    );
+    const currentRound = roundsInDay + 1;
     const dayClock = document.createElement("div");
     dayClock.className = "day-clock";
     if (
       (state.phase === GamePhase.MOVEMENT || state.phase === GamePhase.ACTION) &&
-      actionsBeforeNight > 0 &&
-      activePlayers.length > 0
+      currentRound <= ACTIONS_PER_PLAYER_PER_DAY
     ) {
-      const totalPerDay = ACTIONS_PER_PLAYER_PER_DAY * activePlayers.length;
-      const progress = totalPerDay > 0 ? 1 - actionsBeforeNight / totalPerDay : 0;
-      const playerNum = state.currentPlayerIndex + 1;
+      const progress = currentRound / ACTIONS_PER_PLAYER_PER_DAY;
+      const icons = ["🌞", "🌤️", "🌅", "🌙"];
+      const icon = icons[Math.min(currentRound - 1, icons.length - 1)];
+      const isLast = currentRound === ACTIONS_PER_PLAYER_PER_DAY;
+      const label = isLast
+        ? (app.lang.ui.lastRound ?? "Dernière manche !")
+        : `${app.lang.ui.round ?? "Manche"} ${currentRound}/${ACTIONS_PER_PLAYER_PER_DAY}`;
       dayClock.innerHTML = `
-        <span class="day-clock-icon">${progress >= 0.75 ? "🌙" : progress >= 0.5 ? "🌅" : "🌞"}</span>
-        <span class="day-clock-label">${actionsBeforeNight === 1 ? (app.lang.ui.nightImminent ?? "Nuit imminente") : `${actionsBeforeNight}/${activePlayers.length} ${app.lang.ui.actionsBeforeNight ?? "avant la nuit"}`}</span>
+        <span class="day-clock-icon">${icon}</span>
+        <span class="day-clock-label">${label}</span>
         <div class="day-clock-track"><div class="day-clock-fill" style="width: ${progress * 100}%"></div></div>
       `;
-      dayClock.title = `Joueur ${playerNum}/${activePlayers.length} · ${actionsBeforeNight} action(s) avant la nuit`;
     } else if (
       state.phase === GamePhase.NIGHT ||
       state.phase === GamePhase.NIGHT_RESOLUTION ||
@@ -523,25 +520,24 @@ export function createGameScreen(app: App): ScreenRenderer {
   function buildDayClockBanner(state: GameState): void {
     const area = getActionArea();
     if (!area) return;
-    const activePlayers = state.players.filter(p => p.status !== PlayerStatus.ELIMINATED);
     const roundsInDay = state.roundsInDay ?? 0;
-    const actionsBeforeNight = Math.max(
-      0,
-      (ACTIONS_PER_PLAYER_PER_DAY - roundsInDay - 1) * activePlayers.length +
-        (activePlayers.length - state.currentPlayerIndex),
-    );
+    const currentRound = roundsInDay + 1;
     if (
       (state.phase === GamePhase.MOVEMENT || state.phase === GamePhase.ACTION) &&
-      actionsBeforeNight > 0 &&
-      activePlayers.length > 0
+      currentRound <= ACTIONS_PER_PLAYER_PER_DAY
     ) {
-      const totalPerDay = ACTIONS_PER_PLAYER_PER_DAY * activePlayers.length;
-      const progress = totalPerDay > 0 ? 1 - actionsBeforeNight / totalPerDay : 0;
+      const progress = currentRound / ACTIONS_PER_PLAYER_PER_DAY;
+      const icons = ["🌞", "🌤️", "🌅", "🌙"];
+      const icon = icons[Math.min(currentRound - 1, icons.length - 1)];
+      const isLast = currentRound === ACTIONS_PER_PLAYER_PER_DAY;
+      const label = isLast
+        ? (app.lang.ui.lastRound ?? "Dernière manche !")
+        : `${app.lang.ui.round ?? "Manche"} ${currentRound}/${ACTIONS_PER_PLAYER_PER_DAY}`;
       const banner = document.createElement("div");
-      banner.className = "day-clock-banner";
+      banner.className = "day-clock-banner" + (isLast ? " night" : "");
       banner.innerHTML = `
-        <span class="day-clock-banner-icon">${progress >= 0.75 ? "🌙" : progress >= 0.5 ? "🌅" : "🌞"}</span>
-        <span class="day-clock-banner-text">${actionsBeforeNight === 1 ? (app.lang.ui.nightImminent ?? "Nuit imminente") : `${actionsBeforeNight}/${activePlayers.length} ${app.lang.ui.actionsBeforeNight ?? "avant la nuit"}`}</span>
+        <span class="day-clock-banner-icon">${icon}</span>
+        <span class="day-clock-banner-text">${label}</span>
         <div class="day-clock-banner-track"><div class="day-clock-banner-fill" style="width: ${progress * 100}%"></div></div>
       `;
       area.appendChild(banner);

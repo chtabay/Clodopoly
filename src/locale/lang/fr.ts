@@ -70,8 +70,8 @@ export const LANG_FR: LangData = {
     car: "Voiture",
     bus: "Bus",
     foot: "À pied",
-    actionsBeforeNight: "avant la nuit",
-    nightImminent: "Nuit imminente",
+    round: "Manche",
+    lastRound: "Dernière manche !",
   },
 
   cells: {
