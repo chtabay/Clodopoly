@@ -474,6 +474,77 @@ body {
   border-bottom: none;
 }
 
+/* Intro modal */
+.intro-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+}
+
+.intro-modal {
+  background: var(--bg-panel);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-xl) var(--space-xl) var(--space-lg);
+  max-width: 520px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+  animation: fadeIn 0.3s ease;
+}
+
+.intro-modal h2 {
+  font-size: var(--font-size-2xl);
+  text-align: center;
+  margin-bottom: var(--space-xs);
+}
+
+.intro-subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: var(--space-lg);
+}
+
+.intro-section {
+  margin-bottom: var(--space-md);
+}
+
+.intro-section strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: var(--font-size-sm);
+}
+
+.intro-section p,
+.intro-section ul {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.intro-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.intro-section li {
+  padding: 3px 0;
+}
+
+.intro-start-btn {
+  width: 100%;
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  font-size: var(--font-size-lg);
+}
+
 .pawn {
   position: absolute;
   width: 14px;
