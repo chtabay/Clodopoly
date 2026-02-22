@@ -44,6 +44,9 @@ import {
   JOB_STATS,
   SHELTER_CELL,
   WORKPLACE_CELL,
+  GUARANTEED_LODGING_COST,
+  SELL_PRICE_RATIO,
+  ACTIONS_PER_PLAYER_PER_DAY,
 } from "./constants";
 
 // ==================== CASE ACTIONS ====================
@@ -412,6 +415,55 @@ export function resolveTaxLuxury(state: GameState, playerId: PlayerId): GameStat
   });
 }
 
+export function resolveSell(state: GameState, playerId: PlayerId, cardId: CardId): GameState {
+  const player = state.players.find(p => p.id === playerId)!;
+  const cell = BOARD[player.position];
+
+  if (cell.type !== CellType.MARKET && cell.type !== CellType.PETIT_BOULOT) return state;
+  if (!player.inventory.includes(cardId)) return state;
+
+  const def = getCardDef(cardId);
+  if (!def?.price) return state;
+
+  const sellPrice = Math.floor(def.price * SELL_PRICE_RATIO);
+
+  let s = updatePlayerInState(state, playerId, p => ({
+    ...p,
+    money: clampMoney(p.money + sellPrice),
+    inventory: p.inventory.filter(c => c !== cardId),
+    pc: clampPC(computePC({ ...p, inventory: p.inventory.filter(c => c !== cardId) } as PlayerState)),
+  }));
+
+  return addJournalEntry(s, {
+    type: JournalEntryType.CASE_ACTION,
+    playerId,
+    message: "sell",
+    data: { cardId, amount: sellPrice },
+  });
+}
+
+export function resolveGuaranteedLodging(state: GameState, playerId: PlayerId): GameState {
+  const player = state.players.find(p => p.id === playerId)!;
+  if (player.position !== 30) return state;
+  if (!canAfford(player, GUARANTEED_LODGING_COST)) return state;
+
+  const guaranteed = new Set(state.guaranteedLodgingForNight ?? []);
+  guaranteed.add(playerId);
+
+  let s = updatePlayerInState(state, playerId, p => ({
+    ...p,
+    money: clampMoney(p.money - GUARANTEED_LODGING_COST),
+  }));
+  s = { ...s, guaranteedLodgingForNight: guaranteed };
+
+  return addJournalEntry(s, {
+    type: JournalEntryType.CASE_ACTION,
+    playerId,
+    message: "guaranteedLodging",
+    data: { amount: GUARANTEED_LODGING_COST },
+  });
+}
+
 // ==================== NIGHT RESOLUTION ====================
 
 export function resolveNight(state: GameState, dice: DiceRoller): GameState {
@@ -433,7 +485,7 @@ export function resolveNight(state: GameState, dice: DiceRoller): GameState {
     s = resolveNightAlone(s, player.id);
   }
 
-  s = { ...s, nightChoices: new Map(), phase: GamePhase.MAINTENANCE };
+  s = { ...s, nightChoices: new Map(), phase: GamePhase.MAINTENANCE, guaranteedLodgingForNight: undefined };
   return s;
 }
 
@@ -573,6 +625,18 @@ function resolveNightAlone(state: GameState, playerId: PlayerId): GameState {
   let s = state;
   const player = s.players.find(p => p.id === playerId)!;
   const cell = BOARD[player.position];
+
+  const hasGuaranteedLodging = state.guaranteedLodgingForNight?.has(playerId);
+
+  if (hasGuaranteedLodging) {
+    s = addJournalEntry(s, {
+      type: JournalEntryType.MAINTENANCE,
+      playerId,
+      message: "sleepsGuaranteedLodging",
+      data: { cellIndex: player.position },
+    });
+    return s;
+  }
 
   if (cell.type === CellType.PROPERTY) {
     const building = s.buildings.get(player.position);
@@ -733,14 +797,16 @@ export function resolveEndTurn(state: GameState): GameState {
     return { ...s, phase: GamePhase.GAME_OVER };
   }
 
-  s = { ...s, turn: s.turn + 1, currentPlayerIndex: 0 };
-
   const firstAlive = s.players.findIndex(
     p => p.status === PlayerStatus.ALIVE || p.status === PlayerStatus.GHOST,
   );
-  s = { ...s, currentPlayerIndex: firstAlive >= 0 ? firstAlive : 0 };
-
-  s = { ...s, phase: GamePhase.MOVEMENT };
+  s = {
+    ...s,
+    turn: s.turn + 1,
+    currentPlayerIndex: firstAlive >= 0 ? firstAlive : 0,
+    roundsInDay: 0,
+    phase: GamePhase.MOVEMENT,
+  };
   return s;
 }
 
@@ -755,7 +821,19 @@ export function advanceToNextPlayer(state: GameState): GameState {
   }
 
   if (nextIdx >= s.players.length) {
-    return { ...s, phase: GamePhase.NIGHT };
+    const roundsInDay = (s.roundsInDay ?? 0) + 1;
+    if (roundsInDay < ACTIONS_PER_PLAYER_PER_DAY) {
+      const firstAlive = s.players.findIndex(
+        p => p.status === PlayerStatus.ALIVE || p.status === PlayerStatus.GHOST,
+      );
+      return {
+        ...s,
+        roundsInDay,
+        currentPlayerIndex: firstAlive >= 0 ? firstAlive : 0,
+        phase: GamePhase.MOVEMENT,
+      };
+    }
+    return { ...s, phase: GamePhase.NIGHT, roundsInDay: 0 };
   }
 
   return { ...s, currentPlayerIndex: nextIdx, phase: GamePhase.MOVEMENT };

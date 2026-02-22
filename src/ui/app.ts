@@ -35,6 +35,8 @@ import {
   resolveRoundup,
   resolveTaxIncome,
   resolveTaxLuxury,
+  resolveSell,
+  resolveGuaranteedLodging,
   resolveNight,
   resolveMaintenance,
   resolveEndTurn,
@@ -213,6 +215,14 @@ export class App {
         break;
       case "taxLuxury":
         this.state = resolveTaxLuxury(this.state, player.id);
+        break;
+      case "sell":
+        if (params?.cardId) {
+          this.state = resolveSell(this.state, player.id, params.cardId as string);
+        }
+        break;
+      case "guaranteedLodging":
+        this.state = resolveGuaranteedLodging(this.state, player.id);
         break;
     }
     this.updateUI();

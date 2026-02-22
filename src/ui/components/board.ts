@@ -2,7 +2,7 @@ import type { App } from "../app";
 import type { GameState, CellIndex } from "../../engine/types";
 import { CellType, GamePhase, PlayerStatus } from "../../engine/types";
 import { BOARD } from "../../engine/board";
-import { getCellDisplayName } from "../../locale/i18n";
+import { getCellDisplayName, getEstablishment } from "../../locale/i18n";
 
 const CELL_ICONS: Record<CellType, string> = {
   [CellType.PROPERTY]: "🏘️",
@@ -103,6 +103,19 @@ export function createBoard(app: App): BoardComponent {
     name.textContent = getCellDisplayName(def.index, app.lang, app.theme);
     el.appendChild(name);
 
+    const establishment = getEstablishment(def.index, app.theme);
+    if (establishment && establishment.services.length > 0) {
+      const estabSpan = document.createElement("span");
+      estabSpan.className = "cell-establishment";
+      estabSpan.textContent = establishment.name;
+      el.appendChild(estabSpan);
+    } else if (establishment && establishment.name) {
+      const estabSpan = document.createElement("span");
+      estabSpan.className = "cell-establishment symbolic";
+      estabSpan.textContent = establishment.name;
+      el.appendChild(estabSpan);
+    }
+
     if (def.type === CellType.PROPERTY) {
       const costTag = document.createElement("span");
       costTag.className = "cell-cost";
@@ -136,6 +149,13 @@ export function createBoard(app: App): BoardComponent {
     title.textContent = `${CELL_ICONS[def.type]} ${cellName}`;
     focusArea.appendChild(title);
 
+    const establishment = getEstablishment(cellIndex, app.theme);
+    if (establishment?.name) {
+      const estabEl = document.createElement("div");
+      estabEl.className = "focus-establishment";
+      estabEl.textContent = establishment.name;
+      focusArea.appendChild(estabEl);
+    }
     if (def.type === CellType.PROPERTY) {
       const building = state.buildings.get(cellIndex);
       const info = document.createElement("div");

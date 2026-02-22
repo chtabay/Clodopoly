@@ -1,10 +1,27 @@
 import { PropertyColor } from "../engine/types";
 
+export type EstablishmentService =
+  | "sell"
+  | "buy"
+  | "work"
+  | "sleep"
+  | "heal"
+  | "employ";
+
+export interface EstablishmentDefinition {
+  name: string;
+  services: EstablishmentService[];
+  /** Coût du logement garanti (si service "sleep" avec option garantie), en € */
+  guaranteedLodgingCost?: number;
+}
+
 export interface LocationTheme {
   id: string;
   label: string;
   propertyNames: Record<PropertyColor, string[]>;
   stationNames: [string, string, string, string];
+  /** Établissements par index de case (propriétés uniquement). Cases sans entrée = pas d'établissement. */
+  establishmentsByCellIndex?: Partial<Record<number, EstablishmentDefinition>>;
 }
 
 export interface LangData {

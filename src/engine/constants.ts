@@ -22,6 +22,8 @@ export const CAR_FUEL_DEBT_LIMIT = 2;
 export const PETIT_BOULOT_PAY = 80;
 export const CLINIC_COST = 50;
 export const SHELTER_EXIT_COST = 50;
+export const GUARANTEED_LODGING_COST = 80;
+export const SELL_PRICE_RATIO = 0.5;
 
 export const TAX_LUXURY_AMOUNT = 75;
 export const TAX_INCOME_RATE = 0.1;
@@ -41,6 +43,8 @@ export const CONFRONTATION_LOSER_PV = -1;
 export const CONFRONTATION_BOTH_PC = -1;
 
 export const MAX_TURNS = 24;
+/** Nombre d'actions par joueur avant que la nuit tombe (1 manche = 1 action par joueur) */
+export const ACTIONS_PER_PLAYER_PER_DAY = 4;
 
 export const JOB_STATS: Record<
   JobType,

@@ -1,6 +1,6 @@
 import { CellDefinition, CellType, PropertyColor } from "../engine/types";
 import { BOARD } from "../engine/board";
-import { LangData, LocationTheme } from "./types";
+import { LangData, LocationTheme, EstablishmentDefinition } from "./types";
 
 export function getCellDisplayName(
   cellIndex: number,
@@ -46,6 +46,13 @@ export function getCellDisplayName(
   if (key) return lang.cells[key];
 
   return `Case ${cellIndex}`;
+}
+
+export function getEstablishment(
+  cellIndex: number,
+  theme: LocationTheme,
+): EstablishmentDefinition | null {
+  return theme.establishmentsByCellIndex?.[cellIndex] ?? null;
 }
 
 export function getCardName(cardId: string, lang: LangData): string {

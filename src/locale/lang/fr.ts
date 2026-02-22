@@ -70,6 +70,8 @@ export const LANG_FR: LangData = {
     car: "Voiture",
     bus: "Bus",
     foot: "À pied",
+    actionsBeforeNight: "avant la nuit",
+    nightImminent: "Nuit imminente",
   },
 
   cells: {
@@ -167,5 +169,8 @@ export const LANG_FR: LangData = {
     shelterEntry:       "{player} entre au Foyer ({turns} tour(s))",
     shelterExit:        "{player} sort du Foyer",
     roundup:            "{player} est envoyé au Foyer (Rafle)",
+    sell:               "{player} vend un objet : +{amount}€",
+    guaranteedLodging:   "{player} loue un logement garanti : -{amount}€",
+    sleepsGuaranteedLodging: "{player} dort dans son logement loué",
   },
 };

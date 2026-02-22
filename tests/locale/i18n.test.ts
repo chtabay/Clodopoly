@@ -19,10 +19,10 @@ describe("i18n", () => {
     });
 
     it("returns station names from theme", () => {
-      expect(getCellDisplayName(5, LANG_FR, THEME_POITIERS)).toBe("Gare de Poitiers");
+      expect(getCellDisplayName(5, LANG_FR, THEME_POITIERS)).toBe("Marché des Couronneries");
       expect(getCellDisplayName(15, LANG_FR, THEME_POITIERS)).toBe("Marché Notre-Dame");
-      expect(getCellDisplayName(25, LANG_FR, THEME_POITIERS)).toBe("CHU de Poitiers");
-      expect(getCellDisplayName(29, LANG_FR, THEME_POITIERS)).toBe("Les Cordeliers");
+      expect(getCellDisplayName(25, LANG_FR, THEME_POITIERS)).toBe("Grand Leclerc");
+      expect(getCellDisplayName(29, LANG_FR, THEME_POITIERS)).toBe("Ilot des Cordeliers");
     });
 
     it("returns localized names for special cells", () => {

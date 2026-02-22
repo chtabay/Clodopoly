@@ -8,9 +8,10 @@ import {
   PlayerStatus,
 } from "../../engine/types";
 import { BOARD } from "../../engine/board";
-import { getCellDisplayName, getCardName, getJobName } from "../../locale/i18n";
+import { getCellDisplayName, getCardName, getJobName, getEstablishment } from "../../locale/i18n";
 import { getCardDef } from "../../engine/cards";
 import { getCurrentPlayer } from "../../engine/state";
+import { ACTIONS_PER_PLAYER_PER_DAY } from "../../engine/constants";
 import { createBoard } from "../components/board";
 
 
@@ -143,6 +144,9 @@ export function createGameScreen(app: App): ScreenRenderer {
       eliminated: `💀 ${pName} est éliminé !`,
       gameOver: `🏆 ${pName} a survécu !`,
       movement: `${pName} se déplace`,
+      sell: `${pName} vend un objet : +${data.amount}€`,
+      guaranteedLodging: `${pName} loue un logement garanti : -${data.amount}€`,
+      sleepsGuaranteedLodging: `${pName} dort dans son logement loué`,
     };
 
     return templates[entry.message] ?? entry.message;
@@ -241,6 +245,9 @@ export function createGameScreen(app: App): ScreenRenderer {
 
     const player = getCurrentPlayer(state);
 
+    const leftGroup = document.createElement("div");
+    leftGroup.className = "top-bar-left";
+
     const playerBanner = document.createElement("span");
     playerBanner.className = "current-player-banner";
     playerBanner.appendChild(colorDot(player.color));
@@ -254,6 +261,51 @@ export function createGameScreen(app: App): ScreenRenderer {
     const phaseSpan = document.createElement("span");
     phaseSpan.textContent = phaseLabels[state.phase] ?? state.phase;
 
+    leftGroup.append(playerBanner, turnSpan, phaseSpan);
+
+    const centerGroup = document.createElement("div");
+    centerGroup.className = "top-bar-center";
+
+    const activePlayers = state.players.filter(p => p.status !== PlayerStatus.ELIMINATED);
+    const roundsInDay = state.roundsInDay ?? 0;
+    const actionsBeforeNight = Math.max(
+      0,
+      (ACTIONS_PER_PLAYER_PER_DAY - roundsInDay - 1) * activePlayers.length +
+        (activePlayers.length - state.currentPlayerIndex),
+    );
+    const dayClock = document.createElement("div");
+    dayClock.className = "day-clock";
+    if (
+      (state.phase === GamePhase.MOVEMENT || state.phase === GamePhase.ACTION) &&
+      actionsBeforeNight > 0 &&
+      activePlayers.length > 0
+    ) {
+      const totalPerDay = ACTIONS_PER_PLAYER_PER_DAY * activePlayers.length;
+      const progress = totalPerDay > 0 ? 1 - actionsBeforeNight / totalPerDay : 0;
+      const playerNum = state.currentPlayerIndex + 1;
+      dayClock.innerHTML = `
+        <span class="day-clock-icon">${progress >= 0.75 ? "🌙" : progress >= 0.5 ? "🌅" : "🌞"}</span>
+        <span class="day-clock-label">${actionsBeforeNight === 1 ? (app.lang.ui.nightImminent ?? "Nuit imminente") : `${actionsBeforeNight}/${activePlayers.length} ${app.lang.ui.actionsBeforeNight ?? "avant la nuit"}`}</span>
+        <div class="day-clock-track"><div class="day-clock-fill" style="width: ${progress * 100}%"></div></div>
+      `;
+      dayClock.title = `Joueur ${playerNum}/${activePlayers.length} · ${actionsBeforeNight} action(s) avant la nuit`;
+    } else if (
+      state.phase === GamePhase.NIGHT ||
+      state.phase === GamePhase.NIGHT_RESOLUTION ||
+      state.phase === GamePhase.MAINTENANCE
+    ) {
+      dayClock.innerHTML = `
+        <span class="day-clock-icon">🌙</span>
+        <span class="day-clock-label">${app.lang.ui.nightPhase ?? "Nuit"}</span>
+      `;
+    } else {
+      dayClock.style.display = "none";
+    }
+    centerGroup.appendChild(dayClock);
+
+    const rightGroup = document.createElement("div");
+    rightGroup.className = "top-bar-right";
+
     const foodSpan = document.createElement("span");
     foodSpan.textContent = `🍽️ ${state.foodCost}€`;
 
@@ -261,7 +313,9 @@ export function createGameScreen(app: App): ScreenRenderer {
     const shelterSpan = document.createElement("span");
     shelterSpan.textContent = `🏠 ${shelterCount}`;
 
-    topBar.append(playerBanner, turnSpan, phaseSpan, foodSpan, shelterSpan);
+    rightGroup.append(foodSpan, shelterSpan);
+
+    topBar.append(leftGroup, centerGroup, rightGroup);
   }
 
   // ── side panel ────────────────────────────────────────────────────
@@ -466,10 +520,52 @@ export function createGameScreen(app: App): ScreenRenderer {
     return board?.actionArea ?? null;
   }
 
+  function buildDayClockBanner(state: GameState): void {
+    const area = getActionArea();
+    if (!area) return;
+    const activePlayers = state.players.filter(p => p.status !== PlayerStatus.ELIMINATED);
+    const roundsInDay = state.roundsInDay ?? 0;
+    const actionsBeforeNight = Math.max(
+      0,
+      (ACTIONS_PER_PLAYER_PER_DAY - roundsInDay - 1) * activePlayers.length +
+        (activePlayers.length - state.currentPlayerIndex),
+    );
+    if (
+      (state.phase === GamePhase.MOVEMENT || state.phase === GamePhase.ACTION) &&
+      actionsBeforeNight > 0 &&
+      activePlayers.length > 0
+    ) {
+      const totalPerDay = ACTIONS_PER_PLAYER_PER_DAY * activePlayers.length;
+      const progress = totalPerDay > 0 ? 1 - actionsBeforeNight / totalPerDay : 0;
+      const banner = document.createElement("div");
+      banner.className = "day-clock-banner";
+      banner.innerHTML = `
+        <span class="day-clock-banner-icon">${progress >= 0.75 ? "🌙" : progress >= 0.5 ? "🌅" : "🌞"}</span>
+        <span class="day-clock-banner-text">${actionsBeforeNight === 1 ? (app.lang.ui.nightImminent ?? "Nuit imminente") : `${actionsBeforeNight}/${activePlayers.length} ${app.lang.ui.actionsBeforeNight ?? "avant la nuit"}`}</span>
+        <div class="day-clock-banner-track"><div class="day-clock-banner-fill" style="width: ${progress * 100}%"></div></div>
+      `;
+      area.appendChild(banner);
+    } else if (
+      state.phase === GamePhase.NIGHT ||
+      state.phase === GamePhase.NIGHT_RESOLUTION ||
+      state.phase === GamePhase.MAINTENANCE
+    ) {
+      const banner = document.createElement("div");
+      banner.className = "day-clock-banner night";
+      banner.innerHTML = `
+        <span class="day-clock-banner-icon">🌙</span>
+        <span class="day-clock-banner-text">${app.lang.ui.nightPhase ?? "Nuit"}</span>
+      `;
+      area.appendChild(banner);
+    }
+  }
+
   function updateActionBar(state: GameState): void {
     const area = getActionArea();
     if (!area) return;
     area.innerHTML = "";
+
+    buildDayClockBanner(state);
 
     const player = getCurrentPlayer(state);
 
@@ -632,6 +728,7 @@ export function createGameScreen(app: App): ScreenRenderer {
 
     switch (cell.type) {
       case CellType.PROPERTY: {
+        const establishment = getEstablishment(player.position, app.theme);
         const building = state.buildings.get(player.position);
         const info = document.createElement("div");
         info.className = "center-case-detail";
@@ -641,12 +738,24 @@ export function createGameScreen(app: App): ScreenRenderer {
         } else if (building === "house") {
           info.textContent = `🏠 Maison — Nuit : ${cell.nightCost ?? "?"}€`;
           addDescription(area, `Vous dormirez ici ce soir. Coût déduit automatiquement.`);
+        } else if (establishment?.guaranteedLodgingCost && establishment.services.includes("sleep")) {
+          const cost = establishment.guaranteedLodgingCost;
+          const canAfford = player.money >= cost;
+          info.textContent = `🏠 ${establishment.name} — Logement garanti : ${cost}€`;
+          if (canAfford) {
+            addActionButton(area, `🏠 Louer logement garanti (${cost}€)`, () =>
+              doActionThenSkip("guaranteedLodging"), true,
+            );
+            addDescription(area, `Évite de dormir dehors (-1 PV, -1 PC). Coût déduit immédiatement.`);
+          } else {
+            addDescription(area, `Pas assez d'argent (${cost}€ requis, vous avez ${player.money}€).`);
+          }
         } else {
           info.textContent = `❌ Pas d'abri — Dormir dehors (-1 PV, -1 PC)`;
           info.style.color = "var(--accent)";
           addDescription(area, `Aucun bâtiment ici. Vous perdrez 1 PV et 1 PC cette nuit.`);
         }
-        area.insertBefore(info, area.querySelector(".action-desc"));
+        area.insertBefore(info, area.children[1] ?? null);
         break;
       }
 
@@ -655,6 +764,20 @@ export function createGameScreen(app: App): ScreenRenderer {
           doActionThenSkip("petitBoulot"), true,
         );
         addDescription(area, "Gagner 80€ immédiatement. Un seul travailleur par tour.");
+        const estabPb = getEstablishment(player.position, app.theme);
+        if (estabPb?.services.includes("sell") && player.inventory.length > 0) {
+          const sellables = player.inventory.filter(cid => getCardDef(cid)?.price);
+          for (const cardId of sellables) {
+            const def = getCardDef(cardId)!;
+            const sellPrice = Math.floor(def.price! * 0.5);
+            const btn = document.createElement("button");
+            btn.className = "action-btn";
+            btn.textContent = `💰 Vendre ${getCardName(cardId, app.lang)} → ${sellPrice}€`;
+            btn.addEventListener("click", () => doActionThenSkip("sell", { cardId }));
+            area.appendChild(btn);
+          }
+          addDescription(area, "Revente à 50 % du prix d'achat.");
+        }
         break;
       }
 
@@ -680,6 +803,20 @@ export function createGameScreen(app: App): ScreenRenderer {
             );
             area.appendChild(btn);
           }
+        }
+        const estab = getEstablishment(player.position, app.theme);
+        if (estab?.services.includes("sell") && player.inventory.length > 0) {
+          const sellables = player.inventory.filter(cid => getCardDef(cid)?.price);
+          for (const cardId of sellables) {
+            const def = getCardDef(cardId)!;
+            const sellPrice = Math.floor(def.price! * 0.5);
+            const btn = document.createElement("button");
+            btn.className = "action-btn";
+            btn.textContent = `💰 Vendre ${getCardName(cardId, app.lang)} → ${sellPrice}€`;
+            btn.addEventListener("click", () => doActionThenSkip("sell", { cardId }));
+            area.appendChild(btn);
+          }
+          addDescription(area, "Revente à 50 % du prix d'achat.");
         }
         break;
       }

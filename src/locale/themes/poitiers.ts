@@ -17,9 +17,29 @@ export const THEME_POITIERS: LocationTheme = {
   },
 
   stationNames: [
-    "Gare de Poitiers",
+    "Marché des Couronneries",
     "Marché Notre-Dame",
-    "CHU de Poitiers",
-    "Les Cordeliers",
+    "Grand Leclerc",
+    "Ilot des Cordeliers",
   ],
+
+  establishmentsByCellIndex: {
+    // Stations (marchés) — index 5, 15, 25, 29
+    5:  { name: "Marché des Couronneries", services: ["buy", "sell"] },
+    15: { name: "Marché Notre-Dame", services: ["buy", "sell"] },
+    25: { name: "Grand Leclerc", services: ["buy", "sell"] },
+    29: { name: "Ilot des Cordeliers", services: ["buy", "sell"] },
+    // Index 11 — Rue Arsène Orillard : pas d'établissement (non défini)
+    // Index 30 — Rue Henri Oudin : Agence immobilière, logement garanti
+    30: {
+      name: "Agence immobilière",
+      services: ["sleep"],
+      guaranteedLodgingCost: 80,
+    },
+    // Index 32 — Bvd de Verdun : Monument aux morts (symbolique, sans service)
+    32: {
+      name: "Monument aux morts",
+      services: [],
+    },
+  },
 };

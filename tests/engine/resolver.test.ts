@@ -490,8 +490,14 @@ describe("advanceToNextPlayer", () => {
     expect(state.currentPlayerIndex).toBe(2);
   });
 
-  it("transitions to NIGHT when all players have played", () => {
+  it("transitions to NIGHT when all players have played ACTIONS_PER_PLAYER_PER_DAY times", () => {
     let state = gameReady(3);
+    for (let round = 0; round < 3; round++) {
+      state.currentPlayerIndex = 2;
+      state = advanceToNextPlayer(state);
+      expect(state.phase).toBe(GamePhase.MOVEMENT);
+      expect(state.currentPlayerIndex).toBe(0);
+    }
     state.currentPlayerIndex = 2;
     state = advanceToNextPlayer(state);
     expect(state.phase).toBe(GamePhase.NIGHT);

@@ -356,6 +356,49 @@ body {
   width: 100%;
 }
 
+.day-clock-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 8px 16px;
+  background: var(--bg-panel-alt);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--accent);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.day-clock-banner.night {
+  border-color: var(--accent-dim);
+}
+
+.day-clock-banner-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.day-clock-banner-text {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.day-clock-banner-track {
+  width: 60px;
+  height: 6px;
+  background: var(--bg-panel);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.day-clock-banner-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-dim));
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
 .center-btn-row {
   display: flex;
   flex-wrap: wrap;
@@ -574,6 +617,21 @@ body {
 
 .cell-cost.no-building {
   color: var(--text-muted);
+}
+
+.cell-establishment {
+  font-size: 0.5rem;
+  color: var(--accent);
+  display: block;
+  margin-top: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cell-establishment.symbolic {
+  color: var(--text-muted);
+  font-style: italic;
 }
 
 .player-stats-grid {
@@ -909,6 +967,7 @@ body {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-md);
   padding: 0 var(--space-lg);
   z-index: 100;
 }
@@ -916,6 +975,28 @@ body {
 .top-bar > span {
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
+}
+
+.top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex: 1;
+  min-width: 0;
+}
+
+.top-bar-center {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+}
+
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-shrink: 0;
 }
 
 .current-player-banner {
@@ -931,6 +1012,44 @@ body {
 
 .current-player-banner strong {
   font-weight: 700;
+}
+
+.day-clock {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 4px 10px;
+  background: var(--bg-panel-alt);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  flex-shrink: 0;
+  border: 1px solid var(--border-color);
+}
+
+.day-clock-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.day-clock-label {
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.day-clock-track {
+  width: 48px;
+  height: 4px;
+  background: var(--bg-panel);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.day-clock-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-dim));
+  border-radius: 2px;
+  transition: width 0.3s ease;
 }
 
 /* --------------------------------------------------------------------------

@@ -145,6 +145,10 @@ export interface GameState {
   journal: JournalEntry[];
   lastDiceRoll: number[] | null;
   nightChoices: Map<PlayerId, NightAction>;
+  /** Joueurs ayant réservé un logement garanti pour cette nuit */
+  guaranteedLodgingForNight?: Set<PlayerId>;
+  /** Manche en cours dans la journée (0 = première, 1 = deuxième, etc.) */
+  roundsInDay?: number;
 }
 
 export enum JournalEntryType {
