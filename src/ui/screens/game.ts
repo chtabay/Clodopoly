@@ -235,45 +235,13 @@ export function createGameScreen(app: App): ScreenRenderer {
     playerBanner.appendChild(nameStrong);
 
     const turnSpan = document.createElement("span");
-    turnSpan.textContent = `${app.lang.ui.turn ?? "Tour"} ${state.turn}`;
+    turnSpan.className = "top-bar-turn";
+    turnSpan.textContent = `Tour ${state.turn}`;
 
-    const phaseCycle = document.createElement("div");
-    phaseCycle.className = "phase-cycle";
-    const phases: { key: string; label: string; icon: string }[] = [
-      { key: "movement", label: "Deplacement", icon: "🚶" },
-      { key: "action",   label: "Action",      icon: "⚡" },
-      { key: "night",    label: "Nuit",         icon: "🌙" },
-      { key: "maint",    label: "Maintenance",  icon: "🔧" },
-    ];
-    const activePhaseMap: Record<string, string> = {
-      [GamePhase.MOVEMENT]: "movement",
-      [GamePhase.ACTION]: "action",
-      [GamePhase.NIGHT]: "night",
-      [GamePhase.NIGHT_RESOLUTION]: "night",
-      [GamePhase.MAINTENANCE]: "maint",
-      [GamePhase.END_TURN]: "maint",
-    };
-    const activeKey = activePhaseMap[state.phase] ?? "movement";
-    for (let i = 0; i < phases.length; i++) {
-      if (i > 0) {
-        const sep = document.createElement("span");
-        sep.className = "phase-cycle-sep";
-        sep.textContent = "›";
-        phaseCycle.appendChild(sep);
-      }
-      const step = document.createElement("span");
-      step.className = "phase-cycle-step";
-      if (phases[i].key === activeKey) step.classList.add("active");
-      step.textContent = `${phases[i].icon}`;
-      step.title = phases[i].label;
-      phaseCycle.appendChild(step);
-    }
-
-    leftGroup.append(playerBanner, turnSpan, phaseCycle);
+    leftGroup.append(playerBanner, turnSpan);
 
     const centerGroup = document.createElement("div");
     centerGroup.className = "top-bar-center";
-
     const dayClock = buildDayStepperHTML(state);
     centerGroup.appendChild(dayClock);
 
@@ -281,8 +249,9 @@ export function createGameScreen(app: App): ScreenRenderer {
     rightGroup.className = "top-bar-right";
 
     const foodSpan = document.createElement("span");
+    foodSpan.className = "top-bar-food";
     foodSpan.title = "Coût de la nourriture par nuit";
-    foodSpan.textContent = `🍽️ ${state.foodCost}€/nuit`;
+    foodSpan.textContent = `🍽️ ${state.foodCost}€`;
 
     const rulesBtn = document.createElement("button");
     rulesBtn.className = "top-bar-rules-btn";
@@ -325,16 +294,19 @@ export function createGameScreen(app: App): ScreenRenderer {
     const journalTitle = document.createElement("h4");
     journalTitle.textContent = app.lang.ui.journal ?? "Journal";
     journal.appendChild(journalTitle);
-    const entries = state.journal.slice(-5).reverse();
+    const entries = state.journal.slice(-8).reverse();
+    const goodMessages = new Set(["salary", "petitBoulot", "shower", "clinic", "hired", "nightCampPeaceful", "sleepsInside", "sleepsGuaranteedLodging", "tempJob"]);
+    const badMessages = new Set(["sleepsOutside", "noFood", "fired", "eliminated", "taxPaid", "taxFailed", "nightCaught", "nightTheft", "roundup"]);
     for (const entry of entries) {
       const entryEl = document.createElement("div");
-      entryEl.className = "journal-entry";
+      const entryClass = goodMessages.has(entry.message) ? "journal-good" : badMessages.has(entry.message) ? "journal-bad" : "";
+      entryEl.className = `journal-entry ${entryClass}`;
       const badge = document.createElement("span");
       badge.className = "turn-badge";
       badge.textContent = `T${entry.turn}`;
       const msg = document.createElement("span");
       msg.className = "entry-message";
-      msg.textContent = entry.message;
+      msg.textContent = formatJournalEntry(entry, state);
       entryEl.appendChild(badge);
       entryEl.appendChild(msg);
       journal.appendChild(entryEl);
