@@ -344,6 +344,161 @@ body {
   right: var(--space-xs);
 }
 
+.cell-cost {
+  font-size: 0.55rem;
+  font-weight: 600;
+  margin-top: 1px;
+}
+
+.cell-cost.has-building {
+  color: var(--toast-success);
+}
+
+.cell-cost.no-building {
+  color: var(--text-muted);
+}
+
+.player-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+  margin: var(--space-sm) 0;
+}
+
+.stat-box {
+  background: var(--bg-primary);
+  border-radius: var(--border-radius);
+  padding: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-box .stat-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.stat-box .stat-value {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+}
+
+.stat-row {
+  margin-bottom: var(--space-xs);
+  font-size: var(--font-size-sm);
+}
+
+.active-player-card {
+  background: var(--bg-panel-alt);
+  border-radius: var(--border-radius);
+  padding: var(--space-md);
+  margin: var(--space-sm);
+}
+
+.inventory-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+}
+
+.inventory-chip {
+  display: inline-block;
+  background: var(--bg-primary);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+}
+
+.inventory-chip.special {
+  border: 1px solid var(--toast-info);
+}
+
+.inventory-details summary {
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  user-select: none;
+  margin-top: var(--space-sm);
+}
+
+.action-info {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  padding: var(--space-sm);
+}
+
+.game-layout {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  padding-top: var(--top-bar-height);
+  padding-bottom: var(--action-bar-height);
+}
+
+.night-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay-bg);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+}
+
+.night-overlay h3 {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--space-lg);
+}
+
+.night-overlay .camp-info {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-lg);
+}
+
+.night-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  max-width: 500px;
+}
+
+.night-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-lg);
+  text-align: center;
+}
+
+.night-action-btn small {
+  color: var(--text-secondary);
+  margin-top: var(--space-xs);
+}
+
+.player-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) 0;
+  font-size: var(--font-size-sm);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.player-row.eliminated {
+  opacity: 0.4;
+  text-decoration: line-through;
+}
+
+.player-row-name { font-weight: 500; min-width: 60px; }
+.player-row-money { color: var(--color-yellow); font-variant-numeric: tabular-nums; }
+.player-row-pv { font-size: 0.7rem; }
+.player-row-pos { color: var(--text-muted); font-size: var(--font-size-xs); flex: 1; text-align: right; }
+
 /* --------------------------------------------------------------------------
    4. PLAYER PANEL
    -------------------------------------------------------------------------- */
@@ -541,11 +696,24 @@ body {
   z-index: 100;
 }
 
-.top-bar .turn-info,
-.top-bar .phase-info,
-.top-bar .food-info {
+.top-bar > span {
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
+}
+
+.current-player-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  background: var(--bg-panel-alt);
+  padding: 4px 12px;
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+}
+
+.current-player-banner strong {
+  font-weight: 700;
 }
 
 /* --------------------------------------------------------------------------

@@ -87,6 +87,13 @@ export function createBoard(
     name.textContent = getCellDisplayName(def.index, app.lang, app.theme);
     el.appendChild(name);
 
+    if (def.type === CellType.PROPERTY) {
+      const costTag = document.createElement("span");
+      costTag.className = "cell-cost";
+      costTag.dataset.cellIndex = String(def.index);
+      el.appendChild(costTag);
+    }
+
     el.addEventListener("click", () => {
       if (!app.state) return;
       if (
@@ -96,8 +103,26 @@ export function createBoard(
         app.chooseCell(def.index);
         return;
       }
-      phaseInfo.textContent =
-        `${getCellDisplayName(def.index, app.lang, app.theme)} ${CELL_ICONS[def.type]}`;
+      const cellName = getCellDisplayName(def.index, app.lang, app.theme);
+      let details = `${CELL_ICONS[def.type]} ${cellName}`;
+      if (def.type === CellType.PROPERTY) {
+        const building = app.state.buildings.get(def.index);
+        if (building === "hotel") {
+          details += `\n🏨 Hôtel · Nuit : ${def.hotelCost}€`;
+        } else if (building === "house") {
+          details += `\n🏠 Maison · Nuit : ${def.nightCost}€`;
+        } else {
+          details += `\n❌ Pas d'abri`;
+        }
+      }
+      const playersHere = app.state.players.filter(
+        p => p.position === def.index && p.status !== PlayerStatus.ELIMINATED,
+      );
+      if (playersHere.length > 0) {
+        details += `\n👥 ${playersHere.map(p => p.name).join(", ")}`;
+      }
+      phaseInfo.style.whiteSpace = "pre-line";
+      phaseInfo.textContent = details;
     });
 
     cells.set(def.index, el);
@@ -142,6 +167,25 @@ export function createBoard(
       b.className = "building-icon";
       b.textContent = kind === "hotel" ? "🏨" : "🏠";
       el.appendChild(b);
+    }
+
+    for (const def of BOARD) {
+      if (def.type !== CellType.PROPERTY) continue;
+      const el = cells.get(def.index);
+      if (!el) continue;
+      const costTag = el.querySelector(".cell-cost") as HTMLElement | null;
+      if (!costTag) continue;
+      const building = state.buildings.get(def.index);
+      if (building === "hotel") {
+        costTag.textContent = `${def.hotelCost}€`;
+        costTag.className = "cell-cost has-building";
+      } else if (building === "house") {
+        costTag.textContent = `${def.nightCost}€`;
+        costTag.className = "cell-cost has-building";
+      } else {
+        costTag.textContent = "—";
+        costTag.className = "cell-cost no-building";
+      }
     }
 
     const reachable = new Set(app.getReachable());

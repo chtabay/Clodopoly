@@ -160,20 +160,29 @@ export function createGameScreen(app: App): ScreenRenderer {
       [GamePhase.GAME_OVER]: app.lang.ui.gameOver ?? "Fin",
     };
 
+    const player = getCurrentPlayer(state);
+
+    const playerBanner = document.createElement("span");
+    playerBanner.className = "current-player-banner";
+    playerBanner.appendChild(colorDot(player.color));
+    const nameStrong = document.createElement("strong");
+    nameStrong.textContent = player.name;
+    playerBanner.appendChild(nameStrong);
+
     const turnSpan = document.createElement("span");
     turnSpan.textContent = `${app.lang.ui.turn ?? "Tour"} ${state.turn}`;
-
-    const sep1 = document.createTextNode(" | ");
 
     const phaseSpan = document.createElement("span");
     phaseSpan.textContent = phaseLabels[state.phase] ?? state.phase;
 
-    const sep2 = document.createTextNode(" | ");
-
     const foodSpan = document.createElement("span");
-    foodSpan.textContent = `${app.lang.ui.food ?? "Nourriture"}: ${state.foodCost}€`;
+    foodSpan.textContent = `🍽️ ${state.foodCost}€`;
 
-    topBar.append(turnSpan, sep1, phaseSpan, sep2, foodSpan);
+    const shelterCount = state.buildingsRemaining;
+    const shelterSpan = document.createElement("span");
+    shelterSpan.textContent = `🏠 ${shelterCount}`;
+
+    topBar.append(playerBanner, turnSpan, phaseSpan, foodSpan, shelterSpan);
   }
 
   // ── side panel ────────────────────────────────────────────────────
@@ -185,8 +194,10 @@ export function createGameScreen(app: App): ScreenRenderer {
     const player = getCurrentPlayer(state);
 
     const playerCard = document.createElement("div");
-    playerCard.className = "player-card";
-    buildPlayerCard(playerCard, player);
+    playerCard.className = "player-card active-player-card";
+    playerCard.style.borderLeftColor = player.color;
+    playerCard.style.borderLeftWidth = "5px";
+    buildPlayerCard(playerCard, player, state);
     sidePanel.appendChild(playerCard);
 
     const summary = document.createElement("div");
@@ -221,22 +232,50 @@ export function createGameScreen(app: App): ScreenRenderer {
     sidePanel.appendChild(journal);
   }
 
-  function buildPlayerCard(container: HTMLElement, player: PlayerState): void {
+  function buildPlayerCard(container: HTMLElement, player: PlayerState, state: GameState): void {
     const nameRow = document.createElement("div");
     nameRow.className = "player-name";
+    nameRow.style.fontSize = "1.2rem";
     nameRow.appendChild(colorDot(player.color));
-    nameRow.appendChild(document.createTextNode(player.name));
+    const nameText = document.createElement("strong");
+    nameText.textContent = player.name;
+    nameRow.appendChild(nameText);
     container.appendChild(nameRow);
 
+    const posRow = document.createElement("div");
+    posRow.className = "stat-row";
+    posRow.style.color = "var(--text-secondary)";
+    posRow.style.fontSize = "var(--font-size-sm)";
+    const cellName = getCellDisplayName(player.position, app.lang, app.theme);
+    const cell = BOARD[player.position];
+    const building = state.buildings.get(player.position);
+    let posText = `📍 ${cellName}`;
+    if (cell.type === CellType.PROPERTY) {
+      if (building === "hotel") {
+        posText += ` — 🏨 Hôtel (${cell.hotelCost ?? "?"}€/nuit)`;
+      } else if (building === "house") {
+        posText += ` — 🏠 Maison (${cell.nightCost ?? "?"}€/nuit)`;
+      } else {
+        posText += ` — ❌ Pas d'abri`;
+      }
+    }
+    posRow.textContent = posText;
+    container.appendChild(posRow);
+
+    const statsGrid = document.createElement("div");
+    statsGrid.className = "player-stats-grid";
+
     const moneyEl = document.createElement("div");
-    moneyEl.className = "stat-row";
-    moneyEl.textContent = `💰 ${player.money}€`;
-    container.appendChild(moneyEl);
+    moneyEl.className = "stat-box";
+    moneyEl.innerHTML = `<span class="stat-label">💰 Argent</span><span class="stat-value money-display">${player.money}€</span>`;
+    statsGrid.appendChild(moneyEl);
 
     const pvEl = document.createElement("div");
-    pvEl.className = "stat-row";
-    pvEl.textContent = pvIcons(player.pv);
-    container.appendChild(pvEl);
+    pvEl.className = "stat-box";
+    pvEl.innerHTML = `<span class="stat-label">❤️ Santé</span><span class="stat-value">${pvIcons(player.pv)}</span>`;
+    statsGrid.appendChild(pvEl);
+
+    container.appendChild(statsGrid);
 
     const pcRow = document.createElement("div");
     pcRow.className = "stat-row pc-gauge";
@@ -257,22 +296,49 @@ export function createGameScreen(app: App): ScreenRenderer {
     const jobName = player.job
       ? getJobName(player.job, app.lang)
       : (app.lang.ui.noJob ?? "Sans emploi");
-    jobEl.textContent = `💼 ${jobName}`;
+    const salary = player.job
+      ? (() => { const s = app.lang.jobs[player.job]; return s ? ` (${getJobSalaryDisplay(player)})` : ""; })()
+      : "";
+    jobEl.textContent = `💼 ${jobName}${salary}`;
     container.appendChild(jobEl);
 
     const details = document.createElement("details");
     details.className = "inventory-details";
+    details.open = true;
     const summaryEl = document.createElement("summary");
-    summaryEl.textContent = `${app.lang.ui.inventory ?? "Inventaire"} (${player.inventory.length})`;
+    summaryEl.textContent = `${app.lang.ui.inventory ?? "Inventaire"} (${player.inventory.length + player.specialCards.length})`;
     details.appendChild(summaryEl);
+    const invGrid = document.createElement("div");
+    invGrid.className = "inventory-grid";
     for (const cardId of player.inventory) {
       const def = getCardDef(cardId);
-      const item = document.createElement("div");
-      item.className = "inventory-item";
+      const item = document.createElement("span");
+      item.className = "inventory-chip";
       item.textContent = `${def?.icon ?? "?"} ${getCardName(cardId, app.lang)}`;
-      details.appendChild(item);
+      item.title = `${getCardName(cardId, app.lang)} — ${def?.pcValue ?? 0} PC`;
+      invGrid.appendChild(item);
     }
+    for (const cardId of player.specialCards) {
+      const def = getCardDef(cardId);
+      const item = document.createElement("span");
+      item.className = "inventory-chip special";
+      item.textContent = `${def?.icon ?? "?"} ${getCardName(cardId, app.lang)}`;
+      invGrid.appendChild(item);
+    }
+    details.appendChild(invGrid);
     container.appendChild(details);
+  }
+
+  function getJobSalaryDisplay(player: PlayerState): string {
+    if (!player.job) return "";
+    const stats: Record<string, { salary: number; bonusSalary: number }> = {
+      cadre: { salary: 500, bonusSalary: 550 },
+      employe: { salary: 350, bonusSalary: 385 },
+      precaire: { salary: 200, bonusSalary: 220 },
+    };
+    const s = stats[player.job];
+    if (!s) return "";
+    return player.pc >= 8 ? `${s.bonusSalary}€` : `${s.salary}€`;
   }
 
   function buildPlayerRow(player: PlayerState): HTMLElement {
@@ -408,7 +474,16 @@ export function createGameScreen(app: App): ScreenRenderer {
     switch (cell.type) {
       case CellType.PROPERTY: {
         const name = getCellDisplayName(player.position, app.lang, app.theme);
-        addInfoText(actionBar, `🏘️ Quartier — ${name}`);
+        const building = state.buildings.get(player.position);
+        let nightInfo: string;
+        if (building === "hotel") {
+          nightInfo = `🏨 Hôtel — Nuit : ${cell.hotelCost ?? "?"}€`;
+        } else if (building === "house") {
+          nightInfo = `🏠 Maison — Nuit : ${cell.nightCost ?? "?"}€`;
+        } else {
+          nightInfo = `❌ Pas d'abri — Dormir dehors (-1 PV, -1 PC)`;
+        }
+        addInfoText(actionBar, `🏘️ ${name} · ${nightInfo}`);
         break;
       }
 
