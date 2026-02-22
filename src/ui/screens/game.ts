@@ -8,7 +8,7 @@ import {
   PlayerStatus,
 } from "../../engine/types";
 import { BOARD } from "../../engine/board";
-import { getCellDisplayName, getCardName, getJobName, getEstablishment } from "../../locale/i18n";
+import { getCellDisplayName, getCardName, getCardDescription, getJobName, getEstablishment } from "../../locale/i18n";
 import { getCardDef } from "../../engine/cards";
 import { getCurrentPlayer } from "../../engine/state";
 import { createBoard } from "../components/board";
@@ -23,13 +23,6 @@ const NIGHT_ACTIONS_ORDER = [
   NightAction.TAKE,
 ] as const;
 
-const AUTO_RESOLVE_TYPES = new Set([
-  CellType.EVENT,
-  CellType.SCAVENGE,
-  CellType.ROUNDUP,
-  CellType.TAX_INCOME,
-  CellType.TAX_LUXURY,
-]);
 
 export function createGameScreen(app: App): ScreenRenderer {
   let root: HTMLElement | null = null;
@@ -40,8 +33,8 @@ export function createGameScreen(app: App): ScreenRenderer {
 
   let nightPlayerShowing: PlayerId | null = null;
   let nightShowTransition = true;
-  let autoActionKey = "";
   let actionDoneThisPhase = false;
+  let pendingResultDisplay: (() => void) | null = null;
   let prevJournalLength = 0;
   
 
@@ -215,15 +208,6 @@ export function createGameScreen(app: App): ScreenRenderer {
     updateActionBar(state);
     updateNightOverlay(state);
 
-    if (state.phase === GamePhase.ACTION) {
-      const player = getCurrentPlayer(state);
-      const cell = BOARD[player.position];
-      const key = `${state.turn}_${state.currentPlayerIndex}_${cell.index}`;
-      if (AUTO_RESOLVE_TYPES.has(cell.type) && key !== autoActionKey) {
-        autoActionKey = key;
-        setTimeout(() => app.autoCaseAction(), 0);
-      }
-    }
   }
 
   // ── top bar ───────────────────────────────────────────────────────
@@ -670,6 +654,22 @@ export function createGameScreen(app: App): ScreenRenderer {
     setTimeout(() => app.skipAction(), 300);
   }
 
+  function doActionThenShowResult(actionType: string, buildResult: () => void): void {
+    app.caseAction(actionType);
+    actionDoneThisPhase = true;
+    pendingResultDisplay = () => {
+      const area = getActionArea();
+      if (!area) return;
+      area.innerHTML = "";
+      buildResult();
+      addActionButton(area, `⏭️ ${app.lang.ui.continue ?? "Continuer"}`, () => {
+        pendingResultDisplay = null;
+        app.skipAction();
+      }, true);
+    };
+    pendingResultDisplay();
+  }
+
   function buildCaseActions(state: GameState, player: PlayerState): void {
     const area = getActionArea();
     if (!area) return;
@@ -677,6 +677,10 @@ export function createGameScreen(app: App): ScreenRenderer {
     const cellName = getCellDisplayName(player.position, app.lang, app.theme);
 
     if (actionDoneThisPhase) {
+      if (pendingResultDisplay) {
+        pendingResultDisplay();
+        return;
+      }
       addInfoText(area, "✅ Action effectuée");
       return;
     }
@@ -840,6 +844,153 @@ export function createGameScreen(app: App): ScreenRenderer {
         addDescription(area, "Le salaire est versé au passage, si vous avez pointé au travail depuis le dernier salaire.");
         break;
 
+      case CellType.EVENT: {
+        addDescription(area, "Un événement aléatoire va se produire. Bonne ou mauvaise surprise...");
+        addActionButton(area, "❓ Tirer une carte Événement", () => {
+          const journalBefore = app.state?.journal.length ?? 0;
+          doActionThenShowResult("event", () => {
+            const area = getActionArea();
+            if (!area) return;
+            const newEntries = (app.state?.journal ?? []).slice(journalBefore);
+            const eventEntry = newEntries.find(e => e.message === "eventCard");
+            const cardId = eventEntry?.data?.cardId as string | undefined;
+            if (cardId) {
+              const def = getCardDef(cardId);
+              const cardName = getCardName(cardId, app.lang);
+              const cardDesc = getCardDescription(cardId, app.lang);
+              const reveal = document.createElement("div");
+              reveal.className = "card-reveal";
+              reveal.innerHTML = `
+                <span class="card-reveal-icon">${def?.icon ?? "❓"}</span>
+                <span class="card-reveal-name">${cardName}</span>
+                <span class="card-reveal-desc">${cardDesc}</span>
+              `;
+              area.appendChild(reveal);
+            } else {
+              addInfoText(area, "Événement résolu.");
+            }
+          });
+        }, true);
+        break;
+      }
+
+      case CellType.SCAVENGE: {
+        addDescription(area, "Fouillez les environs. Vous pourriez trouver un objet utile... ou rien.");
+        addActionButton(area, "🔍 Fouiller", () => {
+          const journalBefore = app.state?.journal.length ?? 0;
+          doActionThenShowResult("scavenge", () => {
+            const area = getActionArea();
+            if (!area) return;
+            const newEntries = (app.state?.journal ?? []).slice(journalBefore);
+            const scvEntry = newEntries.find(e => e.message === "scavengeCard");
+            const cardId = scvEntry?.data?.cardId as string | undefined;
+            if (cardId) {
+              const def = getCardDef(cardId);
+              const cardName = getCardName(cardId, app.lang);
+              const cardDesc = getCardDescription(cardId, app.lang);
+              const reveal = document.createElement("div");
+              reveal.className = "card-reveal";
+              reveal.innerHTML = `
+                <span class="card-reveal-icon">${def?.icon ?? "🔍"}</span>
+                <span class="card-reveal-name">${cardName}</span>
+                <span class="card-reveal-desc">${cardDesc}</span>
+              `;
+              area.appendChild(reveal);
+            } else {
+              addInfoText(area, "Vous n'avez rien trouvé.");
+            }
+          });
+        }, true);
+        break;
+      }
+
+      case CellType.TAX_INCOME: {
+        const taxAmount = Math.max(20, Math.floor(player.money * 0.1));
+        const canPay = player.money >= taxAmount;
+        addDescription(area,
+          canPay
+            ? `Impôts sur le revenu : 10 % de votre capital (min 20€). Vous devez ${taxAmount}€. Solde : ${player.money}€.`
+            : `Impôts sur le revenu : vous ne pouvez pas payer. Vous perdrez 1 PC.`,
+        );
+        addActionButton(area, canPay ? `📈 Payer ${taxAmount}€` : "📈 Subir la pénalité (-1 PC)", () => {
+          doActionThenShowResult("taxIncome", () => {
+            const area = getActionArea();
+            if (!area) return;
+            const reveal = document.createElement("div");
+            reveal.className = "card-reveal";
+            if (canPay) {
+              reveal.innerHTML = `
+                <span class="card-reveal-icon">📈</span>
+                <span class="card-reveal-name">Impôts payés</span>
+                <span class="card-reveal-desc">-${taxAmount}€ de votre capital.</span>
+              `;
+            } else {
+              reveal.innerHTML = `
+                <span class="card-reveal-icon">📈</span>
+                <span class="card-reveal-name">Impôts impayés</span>
+                <span class="card-reveal-desc">-1 PC. Votre crédibilité en prend un coup.</span>
+              `;
+            }
+            area.appendChild(reveal);
+          });
+        }, true);
+        break;
+      }
+
+      case CellType.TAX_LUXURY: {
+        const canPay = player.money >= 75;
+        addDescription(area,
+          canPay
+            ? `Amende de luxe : 75€. Solde : ${player.money}€.`
+            : `Amende de luxe : vous ne pouvez pas payer 75€. Vous perdrez 1 PC.`,
+        );
+        addActionButton(area, canPay ? "💸 Payer 75€" : "💸 Subir la pénalité (-1 PC)", () => {
+          doActionThenShowResult("taxLuxury", () => {
+            const area = getActionArea();
+            if (!area) return;
+            const reveal = document.createElement("div");
+            reveal.className = "card-reveal";
+            if (canPay) {
+              reveal.innerHTML = `
+                <span class="card-reveal-icon">💸</span>
+                <span class="card-reveal-name">Amende payée</span>
+                <span class="card-reveal-desc">-75€.</span>
+              `;
+            } else {
+              reveal.innerHTML = `
+                <span class="card-reveal-icon">💸</span>
+                <span class="card-reveal-name">Amende impayée</span>
+                <span class="card-reveal-desc">-1 PC. Votre crédibilité en prend un coup.</span>
+              `;
+            }
+            area.appendChild(reveal);
+          });
+        }, true);
+        break;
+      }
+
+      case CellType.ROUNDUP: {
+        addDescription(area, "Rafle ! Les autorités vous interpellent. Direction le Foyer d'urgence.");
+        addActionButton(area, "🚨 Subir la rafle", () => {
+          doActionThenShowResult("roundup", () => {
+            const area = getActionArea();
+            if (!area) return;
+            const newEntries = (app.state?.journal ?? []).slice(-3);
+            const shelterEntry = newEntries.find(e => e.message === "shelterEntry");
+            const turns = (shelterEntry?.data?.turns as number) ?? "?";
+            const reveal = document.createElement("div");
+            reveal.className = "card-reveal";
+            reveal.innerHTML = `
+              <span class="card-reveal-icon">🚨</span>
+              <span class="card-reveal-name">Envoyé au Foyer</span>
+              <span class="card-reveal-desc">Vous y resterez ${turns} tour(s). Logement et repas gratuits, mais impossible de travailler.</span>
+            `;
+            area.appendChild(reveal);
+          });
+        }, true);
+        break;
+      }
+
       default:
         break;
     }
@@ -983,7 +1134,7 @@ export function createGameScreen(app: App): ScreenRenderer {
     nightOverlay = null;
     board = null;
     nightPlayerShowing = null;
-    autoActionKey = "";
+    pendingResultDisplay = null;
   }
 
   return { mount, update, unmount };

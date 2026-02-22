@@ -85,8 +85,8 @@ export const LANG_FR: LangData = {
     clinic: "Centre de soins",
     market: "Marché",
     petitBoulot: "Petit Boulot",
-    taxIncome: "Inflation",
-    taxLuxury: "Amende",
+    taxIncome: "Impôts",
+    taxLuxury: "Amende de luxe",
   },
 
   cards: {
